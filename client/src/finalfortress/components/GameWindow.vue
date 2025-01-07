@@ -2,6 +2,8 @@
 import { ref, onMounted } from "vue";
 import { Zombie} from "@/finalfortress/scripts/Zombie";
 import ZombieComponent from "@/finalfortress/components/ZombieComponent.vue";
+import Fortress from "@/finalfortress/components/Fortress.vue";
+import UpgradeMenu from "@/finalfortress/components/UpgradeMenu.vue";
 
 const zombies = ref<Zombie[]>([]);
 const gameWindowWidth = ref(0);
@@ -11,8 +13,8 @@ const randomInt = (min: number, max: number) => Math.floor(Math.random() * (max 
 
 function spawnZombie() {
   const newZombie = new Zombie(
-      20,
-      20,
+      2,
+      2,
       gameWindowWidth.value - 20,
       randomInt(10, gameWindowHeight.value - 10),
       "green"
@@ -70,6 +72,8 @@ onMounted(() => {
 
 <template>
   <div id="game-window">
+    <UpgradeMenu></UpgradeMenu>
+    <Fortress></Fortress>
     <ZombieComponent
         v-for="(zombie, index) in zombies"
         :key="'zombie-' + index"

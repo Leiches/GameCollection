@@ -23,8 +23,8 @@ function handleDestroy() {
   <div
       class="moveable"
       :style="{
-      width: `${props.width}px`,
-      height: `${props.height}px`,
+      width: `${props.width}vw`,
+      height: `${props.height}vw`,
       backgroundColor: props.color,
       transform: `translate(${props.positionX}px, ${props.positionY}px)`
       }"
