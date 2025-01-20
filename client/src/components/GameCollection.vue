@@ -7,7 +7,7 @@
   </header>
   <main>
     <router-link to="/Sudoku/splashscreen">Play Sudoku</router-link>
-    <router-link to="/Sudoku/splashscreen">Play Game 2</router-link>
+    <router-link to="/CineLine/play">Play CineLine</router-link>
     <router-link to="/Sudoku/splashscreen">Play Game 3</router-link>
   </main>
 </template>
