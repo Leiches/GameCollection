@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import {ref, onMounted, computed} from "vue";
 import { Zombie} from "@/finalfortress/scripts/Zombie";
 import ZombieComponent from "@/finalfortress/components/ZombieComponent.vue";
 import Fortress from "@/finalfortress/components/Fortress.vue";
-import UpgradeMenu from "@/finalfortress/components/UpgradeMenu.vue";
+import {LinkedList} from "@/finalfortress/scripts/custom-types/LinkedList";
+import {ListItem} from "@/finalfortress/scripts/custom-types/ListItem";
 
-const zombies = ref<Zombie[]>([]);
+const zombies = new LinkedList<Zombie>();
 const gameWindowWidth = ref(0);
 const gameWindowHeight = ref(0);
 
@@ -19,12 +20,13 @@ function spawnZombie() {
       randomInt(10, gameWindowHeight.value - 10),
       "green"
   );
-  zombies.value.push(newZombie);
-  cooldown = 400;
+  zombies.add(new ListItem<Zombie>(newZombie));
+  cooldown.value = 400;
 }
 
 function moveZombies() {
-  zombies.value.forEach((zombie) => {
+  const zombieList = zombies.traverse();
+  zombieList.forEach((zombie) => {
     const dx = randomInt(-5, 1);
     const dy = randomInt(-3, 3);
     zombie.move(dx, dy);
@@ -34,17 +36,20 @@ function moveZombies() {
   });
 }
 
-// REWORK WITH LIST
-function removeZombie(index: number) {
-  zombies.value.splice(index, 1); // Remove the zombie at the given index
-  cooldown = 1000;
+function removeZombie(zombie: Zombie) {
+  const zombieListItem = zombies.find(zombie);
+  if (zombieListItem) {
+    zombies.remove(zombieListItem); // Properly remove the item from the linked list
+    cooldown.value = 1000;
+  }
 }
 
-let cooldown = 0;
+const cooldown = ref(0);
+
+const zombieArray = computed(() => zombies.traverse());
 
 // Start the game loop
 onMounted(() => {
-
   const gameWindow = document.getElementById("game-window");
   if (gameWindow) {
     const rect = gameWindow.getBoundingClientRect();
@@ -54,49 +59,49 @@ onMounted(() => {
 
   const gameLoop = setInterval(() => {
     // Spawn zombies if the count is below the limit
-    if (zombies.value.length < 10 && cooldown == 0) {
+    if (zombies.size() < 10 && cooldown.value == 0) {
       spawnZombie();
     }
-    else if (cooldown > 0)
+    else if (cooldown.value > 0)
     {
-      cooldown -= 100;
+      cooldown.value -= 100;
     }
 
     // Move all zombies
     moveZombies();
 
-    // Add any additional game logic here (e.g., collision detection, scoring)
+  // Add any additional game logic here (e.g., collision detection, scoring)
   }, 100);
 });
 </script>
 
 <template>
   <div id="game-window">
-    <UpgradeMenu></UpgradeMenu>
     <Fortress></Fortress>
     <ZombieComponent
-        v-for="(zombie, index) in zombies"
-        :key="'zombie-' + index"
-        class="zombie"
-        :width="zombie.width"
-        :height="zombie.height"
-        :color="zombie.color"
-        :positionX="zombie.positionX"
-        :positionY="zombie.positionY"
-        @destroy="removeZombie(index)"
+      v-for="(zombie, index) in zombieArray"
+      :key="index"
+      class="zombie"
+      :width="zombie.width"
+      :height="zombie.height"
+      :color="zombie.color"
+      :positionX="zombie.positionX"
+      :positionY="zombie.positionY"
+      @destroy="removeZombie(zombie)"
     ></ZombieComponent>
+
   </div>
 </template>
 
 
 <style scoped>
-  div {
-    background-color: lightgray;
-    min-width: 100%;
-    min-height: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    overflow: hidden;
-  }
+div {
+  background-color: lightgray;
+  min-width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  overflow: hidden;
+}
 </style>

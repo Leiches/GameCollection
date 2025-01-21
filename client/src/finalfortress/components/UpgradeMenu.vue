@@ -4,72 +4,58 @@ let items = ["A", "B", "C", "D", "E", "F"];
 </script>
 
 <template>
-  <div class="upgrade-menu test-pos">
-    <div class="center-block">
-    </div>
-    <div class="option"
-         v-for="(item, index) in items"
-         :style="{ transform: `rotate(${index * (360/items.length)}deg)`}"
-
+  <div style="all: unset">
+    <div class="option-menu-deco"></div>
+    <div class="option-menu">
+      <div class="option"
+           v-for="item in items"
       >
-      <p class="option-button">{{ item }}
-      </p>
-      <div class="border-left"></div>
-
+        <div class="option-content">
+          {{ item }}
+        </div>
+      </div>
     </div>
+
   </div>
 </template>
 
 <style scoped>
-  .upgrade-menu {
-    margin-top: 50px;
-    margin-left: 30px;
+  .option-menu {
+    position: absolute;
 
-    position: relative;
-    min-width: 16vw;
-    height: 16vw;
-    border-radius: 100%;
-    background: black;
-    z-index: 10;
+    left:300px;
+    top: 300px;
 
+    background-color: black;
+    border: 2px solid black;
+    border-radius: 4px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
+    flex-direction: row;
+    gap: 1px;
+
   }
 
-  .center-block {
-    position: absolute;
-    border-radius: 100%;
-    width: 5vw;
-    height: 5vw;
-    border: 0.2vw solid white;
-  }
+  .option-menu-deco{
+    width: 1vw;
+    height: 1vw;
+    content: "";
+    background: black;
+    rotate: 45deg;
 
-  .border-left {
-    border-left: 1px solid white;
-    position: absolute;
-    top: 10.5vw;
-    bottom: 0;
   }
 
   .option {
-    position: absolute;
-    height: 5.5vw;
-    padding-bottom: 16vw;
-  }
-
-  .option-button:hover {
+    width: 3vw;
+    height: 3vw;
     background-color: white;
     color: black;
-    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  .option-button {
-    position: absolute;
-    justify-self: center;
-    align-self: center;
-    width: 8vw;
-    height: 8vw;
+  .option:hover {
+    background-color: #a6a6a6;
+    color: white;
   }
 </style>
