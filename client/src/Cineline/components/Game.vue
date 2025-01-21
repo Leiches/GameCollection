@@ -52,12 +52,12 @@
         console.error('Error fetching data:', error);
     });
 
-    const selectYear = (year: number): void => {
+    const selectYear = (yearGuess: number): void => {
 
         if (movieStore.movies) {
             if (roundCount.value < movieStore.movies?.length) {
 
-                const diff = Math.abs(movieStore.movies[roundCount.value - 1].year - year);
+                const diff = Math.abs(movieStore.movies[roundCount.value - 1].year - yearGuess);
 
                 score.value -= diff
                 roundCount.value += 1;
@@ -72,7 +72,7 @@
     <h1>Round {{ roundCount }} of {{ movieStore.movies?.length }}</h1>
     <h1>Score: {{ score }}</h1>
     <Movie :movie="movieStore.movies ? movieStore.movies[roundCount - 1] : {title: 'unknown', poster_path: 'unknown', year: 2025}"/>
-    <Timeline @selectYear="selectYear"/>
+    <Timeline @selectYear="selectYear" :correctYear="movieStore.movies ? movieStore.movies[roundCount - 1].year : 2025"/>
 </template>
 
 <style>
