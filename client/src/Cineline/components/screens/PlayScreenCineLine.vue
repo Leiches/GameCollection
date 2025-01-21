@@ -1,10 +1,10 @@
 <script setup lang="ts">
-    import Timeline from '../Timeline.vue'
+    import Game from '../Game.vue'
 </script>
 
 <template>
     <Suspense>
-        <Timeline />
+        <Game />
     </Suspense>
 </template>
 
