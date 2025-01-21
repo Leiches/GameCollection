@@ -15,10 +15,10 @@
   },
   "dependencies": {
     "@vue/test-utils": "^2.4.6",
+    "axios": "^1.7.7",
     "pinia": "^2.3.0",
     "vue": "^3.5.12",
-    "vue-router": "^4.5.0",
-    "axios": "^1.7.7"
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",
