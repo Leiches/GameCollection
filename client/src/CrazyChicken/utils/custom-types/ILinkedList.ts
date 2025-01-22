@@ -1,4 +1,4 @@
-﻿import {Node} from "./Node";
+﻿import {Node} from "@/CrazyChicken/utils/custom-types/Node";
 
 export interface ILinkedList<T> {
   insertStart(data: T): Node<T>;

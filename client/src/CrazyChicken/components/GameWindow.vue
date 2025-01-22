@@ -1,10 +1,44 @@
 <script setup lang="ts">
-import {ref, onMounted} from "vue";
+import { ref, onMounted } from 'vue'
+import Bird from '@/CrazyChicken/components/Bird.vue'
+import { reactive } from "vue";
+import { LinkedList } from '@/CrazyChicken/utils/custom-types/LinkedList'
+import { Point } from "@/CrazyChicken/utils/custom-types/Point"
+import { randomRange } from "@/CrazyChicken/utils/functions/randomRange";
+import { BirdObject} from "@/CrazyChicken/scripts/BirdObject";
 
-const gameWindowWidth = ref(0);
-const gameWindowHeight = ref(0);
+const gameWindowWidth = ref(0)
+const gameWindowHeight = ref(0)
 
-const cooldown = ref(0);
+const cooldown = ref(0)
+
+const birds: LinkedList<BirdObject> = reactive(new LinkedList<BirdObject>())
+const birdColors: string[] = ['#ff6767', '#2a535b', '#fdab00']
+
+function spawnBird() {
+  const width = Math.random() * (30 - 10) + 10;
+  const height = Math.random() * (30 - 10) + 10;
+
+  const startPoint: Point = {
+    x: Math.random() < 0.5 ? -50 : gameWindowWidth.value + 50,
+    y: Math.random() * (gameWindowHeight.value - height),
+  };
+
+  const endPoint: Point = {
+    x: startPoint.x === -50 ? gameWindowWidth.value + 50 : -50,
+    y: Math.random() * (gameWindowHeight.value - height),
+  };
+
+  const randomColor = randomRange(birdColors);
+  const speed = Math.random() * (0.01 - 0.005) + 0.005;
+
+  const b = new BirdObject(width, height, randomColor, startPoint, endPoint, speed, gameWindowHeight.value);
+  birds.insertEnd(b);
+  console.log("SPAWN");
+}
+
+
+
 
 // Start the game loop
 onMounted(() => {
@@ -16,34 +50,66 @@ onMounted(() => {
   }
 
   const gameLoop = setInterval(() => {
-    // Spawn zombies if the count is below the limit
+    // Spawn birds if necessary
+    if (birds.size() < 3) {
+      spawnBird();
+      cooldown.value = 1200;
+    }
 
-    if (cooldown.value > 0)
-    {
-      cooldown.value -= 100;
+    if (cooldown.value > 0) {
+      cooldown.value -= 50;
     }
 
 
-  // Add any additional game logic here (e.g., collision detection, scoring)
-  }, 100);
+    // Move all birds
+    const birdsArr = birds.traverse();
+    const birdsToDelete: BirdObject[] = [];
+
+    for (const bird of birdsArr) {
+      bird.move(); // 16ms time delta for 60FPS
+      if (
+        bird.progress >= 1 ||
+        bird.currentPoint.x < -80 ||
+        bird.currentPoint.x > gameWindowWidth.value + 80
+      ) {
+        birdsToDelete.push(bird);
+      }
+
+    }
+
+    for (const bird of birdsToDelete) {
+      const node = birds.search((n) => n.id === bird.id);
+      if (node) {
+        birds.delete(node);
+      }
+    }
+
+  }, 16);
 });
+
 </script>
 
 <template>
   <div id="game-window">
-
+    <Bird
+      v-for="(bird, index) in birds.traverse()"
+      :key="index"
+      :bird-height="bird.height"
+      :bird-width="bird.width"
+      :color="bird.color"
+      :bird-x="bird.currentPoint.x"
+      :bird-y="bird.currentPoint.y"
+    >
+    </Bird>
   </div>
 </template>
 
-
 <style scoped>
-div {
-  background-color: lightgray;
+#game-window {
+  position: relative; /* Important for positioning birds */
   width: 900px;
   height: 675px;
-  margin: 0;
-  padding: 0;
-  display: flex;
+  background-color: lightgray;
   overflow: hidden;
 }
 </style>

@@ -1,5 +1,5 @@
-﻿import type {ILinkedList} from "@/Crazychicken/scripts/custom-types/ILinkedList";
-import {Node} from "@/Crazychicken/scripts/custom-types/Node";
+﻿import type {ILinkedList} from "@/Crazychicken/utils/custom-types/ILinkedList";
+import {Node} from "@/CrazyChicken/utils/custom-types/Node"
 
 export class LinkedList<T> implements ILinkedList<T> {
   private start: Node<T> | null = null
@@ -10,7 +10,7 @@ export class LinkedList<T> implements ILinkedList<T> {
       this.start = node;
     } else {
       this.start.prev = node;
-      node.next = node;
+      node.next = this.start;
       this.start = node;
     }
     return node;
@@ -21,12 +21,10 @@ export class LinkedList<T> implements ILinkedList<T> {
     if (!this.start) {
       this.start = node;
     } else {
-      // Recursive function to get the last node
-      const getLast = (node: Node<T>): Node<T> => {
-        return node.next ? getLast(node.next) : node;
-      };
-
-      const lastNode = getLast(this.start);
+      let lastNode = this.start;
+      while (lastNode.next) {
+        lastNode = lastNode.next;
+      }
       node.prev = lastNode;
       lastNode.next = node;
     }
@@ -34,26 +32,52 @@ export class LinkedList<T> implements ILinkedList<T> {
   }
 
   public delete(node: Node<T>): void {
-    if (!node.prev) {
+    if (!node) return;
+
+    console.log("Deleting node:", node.data);
+
+    // If the node to delete is the start node, update the start pointer
+    if (node === this.start) {
+      console.log("Node is the start. Updating start to:", node.next?.data || null);
       this.start = node.next;
-    } else {
-      const prevNode = node.prev;
-      prevNode.next = node.next;
     }
+
+    // Update the previous node's `next` pointer
+    if (node.prev) {
+      console.log("Updating previous node's next to:", node.next?.data || null);
+      node.prev.next = node.next;
+    }
+
+    // Update the next node's `prev` pointer
+    if (node.next) {
+      console.log("Updating next node's previous to:", node.prev?.data || null);
+      node.next.prev = node.prev;
+    }
+
+    // Detach the node completely
+    node.next = null;
+    node.prev = null;
+
+    console.log("Node deleted successfully:", node.data);
   }
 
   public traverse(): T[] {
     const array: T[] = [];
-    if (!this.start) {
-      return array;
+    let currentNode = this.start;
+
+    console.log("Starting traversal...");
+
+    while (currentNode) {
+      console.log("Visiting node:", currentNode.data);
+      array.push(currentNode.data);
+      currentNode = currentNode.next;
     }
 
-    const addToArray = (node: Node<T>): T[] => {
-      array.push(node.data);
-      return node.next ? addToArray(node.next) : array;
-    };
-    return addToArray(this.start);
+    console.log("Traversal result:", array);
+    return array;
   }
+
+
 
   public size(): number {
     return this.traverse().length;
@@ -68,6 +92,20 @@ export class LinkedList<T> implements ILinkedList<T> {
     };
 
     return this.start ? checkNext(this.start) : null;
+  }
+
+  //Debug method to check list integrity because for some reason everything was f----d
+  public traverseNodes(): void {
+    let currentNode = this.start;
+    console.log("Traversing nodes...");
+    while (currentNode) {
+      console.log("Node:", {
+        data: currentNode.data,
+        prev: currentNode.prev?.data || null,
+        next: currentNode.next?.data || null,
+      });
+      currentNode = currentNode.next;
+    }
   }
 
 }
