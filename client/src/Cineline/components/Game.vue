@@ -31,6 +31,7 @@
 
     const roundCount = ref(1)
     const score = ref(0)
+    const showYear = ref(false)
 
     const movieStore = useMovieStore()
 
@@ -52,29 +53,73 @@
         console.error('Error fetching data:', error);
     });
 
-    const selectYear = (yearGuess: number): void => {
+    const nextMovie = (): void => {
 
         if (movieStore.movies) {
             if (roundCount.value < movieStore.movies?.length) {
 
-                const diff = Math.abs(movieStore.movies[roundCount.value - 1].year - yearGuess);
-
-                score.value -= diff
                 roundCount.value += 1;
+                showYear.value = false;
             }
         }
     }
+
+    const updateScore = (yearGuess: number) => {
+
+        if (movieStore.movies) {
+
+            showYear.value = true
+
+            const duration = 2000;
+            const startTimestamp = performance.now();
+            const diff = Math.abs(movieStore.movies[roundCount.value - 1].year - yearGuess);
+            const startScore = score.value;
+            const endScore = score.value - diff;
+            
+            const step = (timestamp: number) => {
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                score.value = Math.round(startScore + (endScore - startScore) * progress);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    score.value = endScore;
+                }
+            };
+            
+            requestAnimationFrame(step);
+        }
+    };
 
 
 </script>
 
 <template>
-    <h1>Round {{ roundCount }} of {{ movieStore.movies?.length }}</h1>
-    <h1>Score: {{ score }}</h1>
-    <Movie :movie="movieStore.movies ? movieStore.movies[roundCount - 1] : {title: 'unknown', poster_path: 'unknown', year: 2025}"/>
-    <Timeline @selectYear="selectYear" :correctYear="movieStore.movies ? movieStore.movies[roundCount - 1].year : 2025"/>
+    <div class="cineline-container">
+        <div class="game-info">    
+            <h1>Movie {{ roundCount }} of {{ movieStore.movies?.length }}</h1>
+            <h1>Score: {{ score }}</h1>
+            <button @click="nextMovie" >Next Movie</button>
+        </div>
+        <Movie :showYear="showYear" :movie="movieStore.movies ? movieStore.movies[roundCount - 1] : {title: 'unknown', poster_path: 'unknown', year: 2025}"/>
+        <Timeline @selectYear="updateScore" :correctYear="movieStore.movies ? movieStore.movies[roundCount - 1].year : 2025"/>
+    </div>
 </template>
 
 <style>
+    .cineline-container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 
+    .game-info {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 </style>

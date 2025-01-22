@@ -1,17 +1,26 @@
 <script setup lang="ts">
-    import type { s } from 'node_modules/vite/dist/node/types.d-aGj9QkWt';
-import { ref } from 'vue';
+    import { ref, watch } from 'vue';
 
     const props = defineProps<{
         correctYear: number
     }>()
+
+    watch(() => props.correctYear, () => {
+        isLocked.value = false
+        showYearGuess.value = false
+
+        transitionX.value = false
+        useRight.value = false
+        timelineSectionWidth.value = 0;
+        timelineSectionLeft.value = 0;
+    })
 
     const emit = defineEmits(['selectYear']);
 
     const showYearGuess = ref(false);
     const timelineRef = ref<HTMLElement | null>(null);
     const yearGuess = ref(2025)
-    const mouseX = ref(0)
+    const posXYearGuess = ref(0)
     const timelineSectionLeft = ref(0)
     const timelineSectionRight = ref(0)
     const timelineSectionWidth = ref(0)
@@ -28,12 +37,11 @@ import { ref } from 'vue';
                 
                 const rect = timelineRef.value.getBoundingClientRect();
                 
-                mouseX.value = event.clientX;
-                const relativeX = mouseX.value - rect.left;
+                posXYearGuess.value = event.clientX - rect.left;
 
-                posXCorrectYear.value = mouseX.value
+                posXCorrectYear.value = posXYearGuess.value
                 
-                yearGuess.value = Math.round(((relativeX - 0) * (2025 - 1900)) / (rect.width - 0) + 1900);
+                yearGuess.value = Math.round(((posXYearGuess.value - 0) * (2025 - 1900)) / (rect.width - 0) + 1900);
                 animatedYear.value = yearGuess.value;
             }
         }
@@ -63,7 +71,7 @@ import { ref } from 'vue';
 
     const lockYear = (): void => {
         isLocked.value = true;
-        //emit('selectYear', yearGuess.value);
+        emit('selectYear', yearGuess.value);
 
         if (yearGuess.value != props.correctYear) {
             if (timelineRef.value) {
@@ -79,13 +87,13 @@ import { ref } from 'vue';
                     useRight.value = false
                     timelineSectionWidth.value = xPosCorrectYear - xPosYearGuess;
                     timelineSectionLeft.value = xPosYearGuess;
-                    posXCorrectYear.value = rect.left + xPosCorrectYear;
+                    posXCorrectYear.value = xPosCorrectYear;
                 }
                 else if ( xPosYearGuess > xPosCorrectYear) {
                     useRight.value = true
                     timelineSectionWidth.value = xPosYearGuess - xPosCorrectYear;
                     timelineSectionRight.value = rect.width - xPosYearGuess;
-                    posXCorrectYear.value = rect.left + xPosCorrectYear;
+                    posXCorrectYear.value = xPosCorrectYear;
                 }
             }
         }
@@ -99,19 +107,21 @@ import { ref } from 'vue';
 </script>
 
 <template>
-        <h1 class="year-correct" :style="transitionX ? {left: posXCorrectYear + 'px', transition: '2s' } : {visibility: 'hidden', left: posXCorrectYear + 'px' }" >{{ animatedYear }}</h1>
-        <div class="timeline-container">
-            <h1>1900</h1>
-            <div ref="timelineRef" class="timeline" @mouseover="showYearGuess = true" @mouseleave="handleMouseLeave" @mousemove="getYear" @click="lockYear">
-                <div class="timeline-section" :style="useRight ? { right: timelineSectionRight + 'px', width: timelineSectionWidth + 'px'} : { left: timelineSectionLeft + 'px', width: timelineSectionWidth + 'px'}"></div>
-            </div>
-            <h1>2025</h1>
+    <div class="timeline-container">
+        <h1>1900</h1>
+        <div ref="timelineRef" class="timeline" @mouseover="showYearGuess = true" @mouseleave="handleMouseLeave" @mousemove="getYear" @click="lockYear">
+            <h1 class="year-correct" :style="transitionX ? {left: posXCorrectYear + 'px', transition: '2s' } : {visibility: 'hidden', left: posXCorrectYear + 'px' }" >{{ animatedYear }}</h1>
+            <div class="timeline-section" :style="useRight ? { right: timelineSectionRight + 'px', width: timelineSectionWidth + 'px'} : { left: timelineSectionLeft + 'px', width: timelineSectionWidth + 'px'}"></div>
+            <h1 class="year-guess" v-show="showYearGuess" :style="{ left: posXYearGuess + 'px' }" >{{ yearGuess }}</h1>
         </div>
-        <h1 class="year-guess" v-show="showYearGuess" :style="{ left: mouseX + 'px' }" >{{ yearGuess }}</h1>
+        <h1>2025</h1>
+    </div>
 </template>
 
 <style scoped>
     .timeline-container {
+        width: 100%;
+        margin-top: 32px;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -119,6 +129,7 @@ import { ref } from 'vue';
 
     .timeline {
         position: relative;
+        flex-grow: 1;
         height: 8px;
         border-radius: 4px;
         background-color: #fff;
@@ -134,12 +145,14 @@ import { ref } from 'vue';
     }
 
     .year-guess {
-        position: fixed;
+        position: absolute;
+        top: 16px;
         transform: translateX(-50%);
     }
 
     .year-correct {
-        position: fixed;
+        position: absolute;
+        bottom: 16px;
         transform: translateX(-50%);
     }
 </style>
