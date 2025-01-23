@@ -3,21 +3,23 @@ import { ref, onMounted } from 'vue'
 import Bird from '@/CrazyChicken/components/Bird.vue'
 import { reactive } from "vue";
 import { LinkedList } from '@/CrazyChicken/utils/custom-types/LinkedList'
-import { Point } from "@/CrazyChicken/utils/custom-types/Point"
+import type { Point } from "@/CrazyChicken/utils/custom-types/Point"
 import { randomRange } from "@/CrazyChicken/utils/functions/randomRange";
 import { BirdObject} from "@/CrazyChicken/scripts/BirdObject";
+import ScoreBox from "@/CrazyChicken/components/ScoreBox.vue";
 
-const gameWindowWidth = ref(0)
-const gameWindowHeight = ref(0)
+const gameWindowWidth = ref(0);
+const gameWindowHeight = ref(0);
 
-const cooldown = ref(0)
+const cooldown = ref(0);
+let score = ref(0);
 
 const birds: LinkedList<BirdObject> = reactive(new LinkedList<BirdObject>())
 const birdColors: string[] = ['#ff6767', '#2a535b', '#fdab00']
 
 function spawnBird() {
-  const width = Math.random() * (30 - 10) + 10;
-  const height = Math.random() * (30 - 10) + 10;
+  const width = Math.random() * (50 - 30) + 30;
+  const height = Math.random() * (50 - 30) + 30;
 
   const startPoint: Point = {
     x: Math.random() < 0.5 ? -50 : gameWindowWidth.value + 50,
@@ -30,14 +32,21 @@ function spawnBird() {
   };
 
   const randomColor = randomRange(birdColors);
-  const speed = Math.random() * (0.01 - 0.005) + 0.005;
+  const speed = Math.random() * (0.005 - 0.003) + 0.003;
 
   const b = new BirdObject(width, height, randomColor, startPoint, endPoint, speed, gameWindowHeight.value);
   birds.insertEnd(b);
-  console.log("SPAWN");
 }
 
+function destroy(bird: any)
+{
+  const node = birds.search((n) => n === bird);
+  if (node) {
+    birds.delete(node);
+    score.value++;
+  }
 
+}
 
 
 // Start the game loop
@@ -78,7 +87,7 @@ onMounted(() => {
     }
 
     for (const bird of birdsToDelete) {
-      const node = birds.search((n) => n.id === bird.id);
+      const node = birds.search((n) => n === bird);
       if (node) {
         birds.delete(node);
       }
@@ -99,14 +108,16 @@ onMounted(() => {
       :color="bird.color"
       :bird-x="bird.currentPoint.x"
       :bird-y="bird.currentPoint.y"
+      @click="destroy(bird)"
     >
     </Bird>
+    <ScoreBox :score="score"></ScoreBox>
   </div>
 </template>
 
 <style scoped>
 #game-window {
-  position: relative; /* Important for positioning birds */
+  position: relative;
   width: 900px;
   height: 675px;
   background-color: lightgray;

@@ -1,5 +1,6 @@
-﻿import type {ILinkedList} from "@/Crazychicken/utils/custom-types/ILinkedList";
+﻿
 import {Node} from "@/CrazyChicken/utils/custom-types/Node"
+import type {ILinkedList} from "@/CrazyChicken/utils/custom-types/ILinkedList";
 
 export class LinkedList<T> implements ILinkedList<T> {
   private start: Node<T> | null = null
@@ -34,23 +35,15 @@ export class LinkedList<T> implements ILinkedList<T> {
   public delete(node: Node<T>): void {
     if (!node) return;
 
-    console.log("Deleting node:", node.data);
-
-    // If the node to delete is the start node, update the start pointer
     if (node === this.start) {
-      console.log("Node is the start. Updating start to:", node.next?.data || null);
       this.start = node.next;
     }
 
-    // Update the previous node's `next` pointer
     if (node.prev) {
-      console.log("Updating previous node's next to:", node.next?.data || null);
       node.prev.next = node.next;
     }
 
-    // Update the next node's `prev` pointer
     if (node.next) {
-      console.log("Updating next node's previous to:", node.prev?.data || null);
       node.next.prev = node.prev;
     }
 
@@ -58,22 +51,17 @@ export class LinkedList<T> implements ILinkedList<T> {
     node.next = null;
     node.prev = null;
 
-    console.log("Node deleted successfully:", node.data);
   }
 
   public traverse(): T[] {
     const array: T[] = [];
     let currentNode = this.start;
 
-    console.log("Starting traversal...");
-
     while (currentNode) {
-      console.log("Visiting node:", currentNode.data);
       array.push(currentNode.data);
       currentNode = currentNode.next;
     }
 
-    console.log("Traversal result:", array);
     return array;
   }
 

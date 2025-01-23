@@ -1,4 +1,5 @@
-﻿
+﻿import type { Point } from "@/CrazyChicken/utils/custom-types/Point"
+
 export class BirdObject {
   width: number;
   height: number;
