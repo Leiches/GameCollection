@@ -4,6 +4,7 @@
     import { useMovieStore } from '@/Cineline/store/movies';
     import Movie from './Movie.vue';
     import { ref } from 'vue';
+    import { useRouter } from 'vue-router';
 
     interface Movie {
         adult: boolean;
@@ -29,9 +30,12 @@
         total_results: number;
     }
 
+    const router = useRouter()
+
     const roundCount = ref(1)
     const score = ref(0)
     const showYear = ref(false)
+    const showButton = ref(false)
 
     const movieStore = useMovieStore()
 
@@ -60,6 +64,11 @@
 
                 roundCount.value += 1;
                 showYear.value = false;
+
+                showButton.value = false;
+            }
+            else {
+                router.push('/CineLine/endscreen')
             }
         }
     }
@@ -68,7 +77,7 @@
 
         if (movieStore.movies) {
 
-            showYear.value = true
+            showYear.value = true;
 
             const duration = 2000;
             const startTimestamp = performance.now();
@@ -84,6 +93,7 @@
                     requestAnimationFrame(step);
                 } else {
                     score.value = endScore;
+                    showButton.value = true;
                 }
             };
             
@@ -99,7 +109,7 @@
         <div class="game-info">    
             <h1>Movie {{ roundCount }} of {{ movieStore.movies?.length }}</h1>
             <h1>Score: {{ score }}</h1>
-            <button @click="nextMovie" >Next Movie</button>
+            <button v-show="showButton" @click="nextMovie" >Next Movie</button>
         </div>
         <Movie :showYear="showYear" :movie="movieStore.movies ? movieStore.movies[roundCount - 1] : {title: 'unknown', poster_path: 'unknown', year: 2025}"/>
         <Timeline @selectYear="updateScore" :correctYear="movieStore.movies ? movieStore.movies[roundCount - 1].year : 2025"/>
