@@ -46,6 +46,40 @@ app.get('/SudokuBoard', (req, res) => {
 
 });
 
+app.get('/Crossword', (req, res) => {
+    console.log("Crossword Backend API Call...")
+
+    const apiUrl = 'https://crossword-maker.p.rapidapi.com/crosswords/create-crossword'
+
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'x-rapidapi-key': '50154ac29emsh8b479d978d31ab4p160ab3jsn0357769acfe4',
+            'x-rapidapi-host': 'crossword-maker.p.rapidapi.com'
+        },
+        body: {
+            qFields: [
+                'question1',
+                'question2'
+            ],
+            aFields: [
+                'Answer1',
+                'ansWer2'
+            ],
+            note: 'example note'
+        }
+    })
+        .then(response => response.text()) // Parse the JSON response
+        .then(data => {
+            res.text(data); // Send the API response data back to the client
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            res.status(500).send('Server error');
+        });
+
+});
+
 app.listen(8080, () => {
     console.log('ApiServer listening on port 8080');
 })

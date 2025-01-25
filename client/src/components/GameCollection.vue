@@ -43,8 +43,7 @@ const connectToChat = () => {
     </header>
     <main>
       <router-link to="/Sudoku/play">Play Sudoku</router-link>
-      <router-link to="/Sudoku/play">Play Game 2</router-link>
-      <router-link to="/Sudoku/play">Play Game 3</router-link>
+      <router-link to="/Crossword/play">Play Crossword</router-link>
     </main>
     <div>
       <p><input v-model="text"><button @click="clickHandler">Send</button></p>
