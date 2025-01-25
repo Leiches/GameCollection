@@ -2,10 +2,6 @@
 import GameBoard from '../GameBoard.vue'
 import GameInfo from '../GameInfo.vue'
 import UserInfo from '../UserInfo.vue'
-
-const screenWidth: number = window.innerWidth;
-const screenHeight: number = window.innerHeight;
-
 </script>
 
 <template>
