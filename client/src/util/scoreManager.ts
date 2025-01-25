@@ -1,5 +1,9 @@
 ﻿import { useUserStore } from "@/store/user";
 
+/*
+* For user references look at client/src/CrazyChicken/components/GameoverScreenComponent.vue
+*/
+//Needs game name and score
 export async function saveHighScore(gameName: string, score: number): Promise<void> {
   const userStore = useUserStore();
 
@@ -11,6 +15,7 @@ export async function saveHighScore(gameName: string, score: number): Promise<vo
   }
 }
 
+// Just enter the game name and call it
 export async function loadHighScore(gameName: string): Promise<number> {
   const userStore = useUserStore();
 
@@ -25,15 +30,16 @@ export async function loadHighScore(gameName: string): Promise<number> {
   }
 }
 
+// Just enter the game name and call it
 export async function fetchLeaderboard(gameName: string): Promise<{ [userName: string]: number }> {
   const userStore = useUserStore();
 
   try {
-    const scores = await userStore.loadHighScores(gameName); // Ensure this returns the scores object
-    console.log("Leaderboard:", scores); // Log the response from `loadHighScores`
-    return scores || {}; // Return an empty object if scores are undefined
+    const scores = await userStore.loadHighScores(gameName);
+    console.log("Leaderboard:", scores);
+    return scores || {};
   } catch (error) {
     console.error("Error fetching leaderboard:", error);
-    return {}; // Return an empty object on error
+    return {};
   }
 }
