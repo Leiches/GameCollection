@@ -49,3 +49,51 @@ app.get('/SudokuBoard', (req, res) => {
 app.listen(8080, () => {
     console.log('ApiServer listening on port 8080');
 })
+
+// Server Management
+
+app.use(express.json());
+
+let highScores = {};
+
+app.post('/highscore', (req, res) => {
+    const { userName, gameName, score } = req.body;
+
+    if (!userName || !gameName || score === undefined) {
+        return res.status(400).json({ error: 'Invalid request. Missing userName, gameName, or score.' });
+    }
+
+    if (!highScores[gameName]) {
+        highScores[gameName] = {};
+    }
+
+    if (!highScores[gameName][userName] || score > highScores[gameName][userName]) {
+        highScores[gameName][userName] = score;
+    }
+
+    console.log('Updated highScores:', highScores); // Add this log
+    res.json({ highScore: highScores[gameName][userName] });
+});
+
+
+
+
+app.get('/highscore/:gameName/:userName', (req, res) => {
+    const { gameName, userName } = req.params;
+
+
+    if (!gameName || !userName) {
+        return res.status(400).json({ error: 'Invalid request. Missing gameName or userName.' });
+    }
+
+    if (!highScores[gameName]) {
+        highScores[gameName] = {};
+    }
+
+    const highScore = highScores[gameName][userName] || 0;
+
+    res.json({ highScore });
+});
+
+
+
