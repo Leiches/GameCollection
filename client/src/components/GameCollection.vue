@@ -43,7 +43,7 @@ const connectToChat = () => {
     </header>
     <main>
       <router-link to="/Sudoku/play">Play Sudoku</router-link>
-      <router-link to="/Sudoku/play">Play Game 2</router-link>
+      <router-link to="/CrazyChicken">Play Crazy Chicken</router-link>
       <router-link to="/Sudoku/play">Play Game 3</router-link>
     </main>
     <div>
