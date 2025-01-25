@@ -44,6 +44,27 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  async function loadHighScores(gameName: string): Promise<{ [userName: string]: number }> {
+    try {
+      const url = `http://localhost:8080/highscore/${gameName}`;
+      console.log('Requesting all high scores from:', url);
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`Failed to load high scores: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log(`All high scores for ${gameName}:`, data.scores);
+      return data.scores || {};
+    } catch (error) {
+      console.error('Error loading high scores:', error);
+      return {};
+    }
+  }
+
+
 
 
   return {
@@ -51,5 +72,6 @@ export const useUserStore = defineStore('user', () => {
     highScores,
     saveHighScore,
     loadHighScore,
+    loadHighScores,
   };
 })

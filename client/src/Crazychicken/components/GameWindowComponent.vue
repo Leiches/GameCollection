@@ -42,8 +42,30 @@ function spawnBird() {
     y: Math.random() * (props.gameWindowHeight as number - height),
   };
 
-  const randomColor = randomRange(birdColors);
-  const speed = Math.random() * (0.005 - 0.003) + 0.003;
+  let isBadBird: boolean;
+  let randomColor;
+
+  if (Math.random() < 0.9) {
+    randomColor = randomRange(birdColors);
+    isBadBird = false;
+  } else {
+    randomColor = '#ff0000'
+    isBadBird = true;
+  }
+  const speed = Math.random() * (0.01- 0.005) + 0.005;
+
+  const diffRand: number = Math.random();
+  let difficulty: number = 0;
+
+  if (diffRand < 0.6) {
+    difficulty = 1;
+  } else if (diffRand < 0.8) {
+    difficulty = 2;
+  } else if (diffRand < 0.95) {
+    difficulty = 3;
+  } else {
+    difficulty = 4;
+  }
 
   const b = new BirdObject(
     width,
@@ -52,7 +74,9 @@ function spawnBird() {
     startPoint,
     endPoint,
     speed,
-    props.gameWindowHeight as number
+    props.gameWindowHeight as number,
+    difficulty,
+    isBadBird
   );
   birds.insertEnd(b);
 }
@@ -75,11 +99,20 @@ function destroy(bird: any) {
     const node = birds.search((n) => n === bird);
     if (node) {
       birds.delete(node);
-      score.value++;
-      if (ammoLeft.value < maxAmmo) {
-        ammoLeft.value += 1;
+      if (bird.isBadBird) {
+        score.value -= 5;
+        if (score.value < 0) {
+          score.value = 0;
+          ammoLeft.value--;
+        }
+      } else {
+        score.value++;
+        if (ammoLeft.value < maxAmmo) {
+          ammoLeft.value++;
+        }
+        ammoLeft.value++;
+
       }
-      ammoLeft.value += 1;
     }
     shoot();
   }
@@ -120,6 +153,11 @@ onMounted(() => {
         birds.delete(node);
       }
     }
+
+    if (ammoLeft.value == 0) {
+      emit("gameover", score.value);
+    }
+
   }, 16);
 });
 

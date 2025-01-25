@@ -95,5 +95,16 @@ app.get('/highscore/:gameName/:userName', (req, res) => {
     res.json({ highScore });
 });
 
+app.get('/highscore/:gameName', (req, res) => {
+    const { gameName } = req.params;
 
+    if (!gameName) {
+        return res.status(400).json({ error: 'Invalid request. Missing gameName.' });
+    }
 
+    if (!highScores[gameName]) {
+        return res.status(404).json({ message: `No high scores found for game: ${gameName}.`, scores: {} });
+    }
+
+    res.json({scores: highScores[gameName]});
+})

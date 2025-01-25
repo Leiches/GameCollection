@@ -21,6 +21,19 @@ export async function loadHighScore(gameName: string): Promise<number> {
     return highScore;
   } catch (error) {
     console.error("Error loading high score:", error);
-    return 0; // Default to 0 if there's an error
+    return 0;
+  }
+}
+
+export async function fetchLeaderboard(gameName: string): Promise<{ [userName: string]: number }> {
+  const userStore = useUserStore();
+
+  try {
+    const scores = await userStore.loadHighScores(gameName); // Ensure this returns the scores object
+    console.log("Leaderboard:", scores); // Log the response from `loadHighScores`
+    return scores || {}; // Return an empty object if scores are undefined
+  } catch (error) {
+    console.error("Error fetching leaderboard:", error);
+    return {}; // Return an empty object on error
   }
 }
