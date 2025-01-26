@@ -2,7 +2,7 @@
 import { useUserStore } from '@/store/user'
 import { ref, onMounted } from 'vue';
 import { io } from 'socket.io-client';
-let showGames = false
+const showGames = ref(false);
 const userStore = useUserStore()
 
 const text = ref('');
@@ -29,13 +29,13 @@ const connectToChat = () => {
 <template>
 
   <div v-if="!showGames">
-    <form>
+    <div>
       <div>
         <label for="firstName">Name:</label>
         <input type="text" id="firstName" v-model="userStore.userName" />
       </div>
       <button :disabled="userStore.userName == ''" @click="showGames = true; connectToChat();">Play Games</button>
-    </form>
+    </div>
   </div>
   <div v-if="showGames">
     <header>
