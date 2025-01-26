@@ -32,9 +32,9 @@ const connectToChat = () => {
     <div>
       <div>
         <label for="firstName">Name:</label>
-        <input type="text" id="firstName" v-model="userStore.userName" />
+        <input type="text" id="firstName" v-model="userStore.userName" @keyup.enter="showGames = true; connectToChat();"/>
       </div>
-      <button :disabled="userStore.userName == ''" @click="showGames = true; connectToChat();">Play Games</button>
+      <button :disabled="userStore.userName == ''" @click="showGames = true; connectToChat();" >Play Games</button>
     </div>
   </div>
   <div v-if="showGames">
@@ -47,7 +47,7 @@ const connectToChat = () => {
       <router-link to="/Crossword/play">Play Daily Crossword</router-link>
     </main>
     <div>
-      <p><input v-model="text"><button @click="clickHandler">Send</button></p>
+      <p><input v-model="text" @keyup.enter="clickHandler"><button @click="clickHandler">Send</button></p>
       <p v-if="messages.length == 0">No messages yet.</p>
       <ul v-else>
         <li v-for="msg in messages">{{ msg }}</li>
