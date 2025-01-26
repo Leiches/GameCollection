@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-import AimLayerComponent from '@/CrazyChicken/components/AimLayerComponent.vue'
+import AimLayerComponent from '@/Crazychicken/components/AimLayerComponent.vue'
 import {ref } from "vue";
 
 const props = defineProps({

@@ -1,6 +1,5 @@
 ﻿<script setup lang="ts">
-
-import AmmunitionComponent from "@/CrazyChicken/components/AmmunitionComponent.vue";
+import AmmunitionComponent from "@/Crazychicken/components/AmmunitionComponent.vue";
 
 defineProps({
   ammoLeft: Number,

@@ -1,6 +1,5 @@
-﻿
-import {Node} from "@/CrazyChicken/utils/custom-types/Node"
-import type {ILinkedList} from "@/CrazyChicken/utils/custom-types/ILinkedList";
+﻿import {Node} from "@/Crazychicken/utils/custom-types/Node"
+import type {ILinkedList} from "@/Crazychicken/utils/custom-types/ILinkedList";
 
 export class LinkedList<T> implements ILinkedList<T> {
   private start: Node<T> | null = null
