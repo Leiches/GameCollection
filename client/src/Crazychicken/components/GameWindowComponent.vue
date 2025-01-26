@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import BirdComponent from '@/CrazyChicken/components/BirdComponent.vue';
+import BirdComponent from '@/Crazychicken/components/BirdComponent.vue';
 import { reactive } from 'vue';
-import { LinkedList } from '@/CrazyChicken/utils/custom-types/LinkedList';
-import type { Point } from '@/CrazyChicken/utils/custom-types/Point';
-import { randomRange } from '@/CrazyChicken/utils/functions/randomRange';
-import { BirdObject } from '@/CrazyChicken/scripts/BirdObject';
-import ScoreBoxComponent from '@/CrazyChicken/components/ScoreBoxComponent.vue';
-import RifleComponent from '@/CrazyChicken/components/RifleComponent.vue';
-import AmmunitionCounterComponent from '@/CrazyChicken/components/AmmunitionCounterComponent.vue';
+import { LinkedList } from '@/Crazychicken/utils/custom-types/LinkedList';
+import type { Point } from '@/Crazychicken/utils/custom-types/Point';
+import { randomRange } from '@/Crazychicken/utils/functions/randomRange';
+import { BirdObject } from '@/Crazychicken/scripts/BirdObject';
+import ScoreBoxComponent from '@/Crazychicken/components/ScoreBoxComponent.vue';
+import RifleComponent from '@/Crazychicken/components/RifleComponent.vue';
+import AmmunitionCounterComponent from '@/Crazychicken/components/AmmunitionCounterComponent.vue';
 
 const props = defineProps({
   gameWindowWidth: Number,
@@ -29,16 +29,18 @@ const maxAmmo = 5;
 const isBlastVisible = ref(false);
 
 function spawnBird() {
-  const width = Math.random() * (50 - 30) + 30;
-  const height = Math.random() * (50 - 30) + 30;
+  const max: number = props.gameWindowWidth as number/ 20;
+  const min: number = props.gameWindowWidth as number/ 25;
+  const width = Math.random() * (max - min) + min;
+  const height = Math.random() * (max - min) + min;
 
   const startPoint: Point = {
-    x: Math.random() < 0.5 ? -50 : props.gameWindowWidth as number + 50,
+    x: Math.random() < 0.5 ? -max : props.gameWindowWidth as number + max,
     y: Math.random() * (props.gameWindowHeight as number - height),
   };
 
   const endPoint: Point = {
-    x: startPoint.x === -50 ? props.gameWindowWidth as number + 50 : -50,
+    x: startPoint.x === -max ? props.gameWindowWidth as number + max : -max,
     y: Math.random() * (props.gameWindowHeight as number - height),
   };
 
@@ -84,7 +86,8 @@ function spawnBird() {
 function shoot() {
   if (ammoLeft.value > 0) {
     ammoLeft.value--; // Decrease ammo
-    const audio = new Audio('src/CrazyChicken/assets/rifle-gunshot-99749.mp3');
+    const audio = new Audio('src/Crazychicken/assets/rifle-gunshot-99749.mp3');
+    audio.volume = 0.4;
     audio.play();
 
     isBlastVisible.value = true;
@@ -121,7 +124,7 @@ function destroy(bird: any) {
 // Start the game loop
 onMounted(() => {
 
-  const gameLoop = setInterval(() => {
+    setInterval(() => {
     // Spawn birds if necessary
     if (birds.size() < 3) {
       spawnBird();
@@ -205,8 +208,17 @@ function handleAmmoDecrement() {
 #game-window {
   position: relative;
   width: 900px;
-  height: 675px;
+  height: 625px;
   background-color: lightgray;
   overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  #game-window {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  }
 }
 </style>

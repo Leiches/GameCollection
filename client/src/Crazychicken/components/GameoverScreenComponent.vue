@@ -39,17 +39,14 @@ onMounted(async () => {
 <template>
   <div
     id="gameover-screen"
-    :style="{ width: `${gameWindowWidth}px`, height: `${gameWindowHeight}px` }"
   >
     <h1
       id="score-display"
-      :style="{ top: `${gameWindowHeight / 2 - 130}px` }"
     >
       FINAL SCORE: {{ score }}
     </h1>
     <h1
       id="high-score-display"
-      :style="{ top: `${gameWindowHeight / 2 - 90}px` }"
     >
       HIGH SCORE: {{ highScore !== null ? highScore : 'Loading...' }}
     </h1>
@@ -57,7 +54,7 @@ onMounted(async () => {
       id="restart"
       @click="emit('restartGame')"
     >
-      RESTART
+      RESTART GAME
     </button>
     <button
       id="back-button"
@@ -88,27 +85,75 @@ onMounted(async () => {
   justify-content: center;
   align-items: center;
   position: relative;
+  width: 100vw;
+  height: 100vh;
 }
 
 #score-display {
   position: absolute;
+  top: 20%;
+}
+
+#high-score-display {
+  position: absolute;
+  top: 30%;
 }
 
 #restart {
-  margin-top: 15px;
+  margin-top: 2%;
 }
 
 #leaderboard {
   position: absolute;
   right: 0;
   text-align: left;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 2%;
+  border-radius: 10%;
+}
+
+@media (max-width: 1100px) {
+  #leaderboard {
+    position: static;
+    margin-top: 1rem;
+    text-align: center;
+    width: 25%;
+  }
+
+  #score-display {
+    top: 5%;
+  }
+
+  #high-score-display {
+    top: 15%
+  }
+}
+
+@media (max-width: 900px) {
+  #leaderboard {
+    position: static;
+    margin-top: 1rem;
+    text-align: center;
+    width: 40%;
+  }
+
+  #restart {
+    margin-top: 10%;
+  }
+}
+
+
+@media (max-width: 500px) {
+  #leaderboard {
+    position: static;
+    margin-top: 1rem;
+    text-align: center;
+    width: 100%;
+  }
 }
 
 .leaderboard-header {
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 2%;
 }
 
 .leaderboard-list {
@@ -120,7 +165,7 @@ onMounted(async () => {
 .leaderboard-item {
   display: flex;
   justify-content: space-between;
-  padding: 5px 0;
+  padding: 1% 0;
   border-bottom: 1px solid gray;
 }
 
@@ -129,31 +174,30 @@ onMounted(async () => {
 }
 
 .rank {
-  width: 30px;
+  width: 10%;
   text-align: left;
 }
 
 .name {
   flex-grow: 1;
   text-align: left;
-  padding-left: 10px;
+  padding-left: 2%;
 }
 
 .score {
-  width: 50px;
+  width: 50%;
   text-align: right;
 }
 
 button {
-  height: 30px;
-  width: 120px;
-  margin: 5px;
+  min-height: 6%;
+  min-width: 10%;
+  margin: 0.5%;
   background-color: transparent;
   border: gray 1px solid;
   color: gray;
+  font-size: 100%;
 }
-
-
 
 #restart:hover {
   background-color: #4ac77e;

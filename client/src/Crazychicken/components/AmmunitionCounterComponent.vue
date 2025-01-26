@@ -1,6 +1,5 @@
 ﻿<script setup lang="ts">
-
-import AmmunitionComponent from "@/CrazyChicken/components/AmmunitionComponent.vue";
+import AmmunitionComponent from "@/Crazychicken/components/AmmunitionComponent.vue";
 
 defineProps({
   ammoLeft: Number,
@@ -24,7 +23,9 @@ defineProps({
     display: flex;
     position: absolute;
     bottom: 0;
-    margin: 10px;
+    margin: 2%;
     opacity: 50%;
+    width: 50%;
+    height: 30%;
   }
 </style>
