@@ -87,6 +87,7 @@ function shoot() {
   if (ammoLeft.value > 0) {
     ammoLeft.value--; // Decrease ammo
     const audio = new Audio('src/CrazyChicken/assets/rifle-gunshot-99749.mp3');
+    audio.volume = 0.4;
     audio.play();
 
     isBlastVisible.value = true;

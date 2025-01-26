@@ -36,7 +36,8 @@ function shoot() {
   if (props.ammoLeft as number > 0)
   {
     const audio = new Audio('src/CrazyChicken/assets/rifle-gunshot-99749.mp3'); // Source: https://pixabay.com/sound-effects/rifle-gunshot-99749/
-    audio.play()
+    audio.volume = 0.4;
+    audio.play();
     localIsBlastVisible = true;
     setTimeout(() => {
       localIsBlastVisible = false;
