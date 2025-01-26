@@ -15,32 +15,31 @@ defineProps({
 <style scoped>
   .ammo-main {
     background: #ff0000;
-    height: 120px;
-    width: 30px;
-    margin: 5px;
-    border: 4px solid slategrey;
-    border-radius: 10px;
+    height: 95%;
+    width: 8%;
+    margin: 2%;
+    border: 2px solid slategrey;
+    border-radius: 6%;
     position: relative;
   }
   .ammo-deco {
     background: goldenrod;
-    width: 30px;
-    height: 30px;
+    width: 100%;
+    height: 30%;
     position: absolute;
     bottom: 0;
-    left: -4px;
-    border-left: 4px solid slategrey;
-    border-right: 4px solid slategrey;
+    border-left: 2px solid slategrey;
+    border-right: 2px solid slategrey;
   }
   .ammo-bottom {
     background: goldenrod;
-    width: 38px;
-    height: 15px;
+    width: 130%;
+    height: 15%;
     position: absolute;
-    bottom: -10px;
-    left: -8px;
+    bottom: -2%;
+    left: -18%;
     border-radius: 5px;
-    border: 4px solid slategrey;
+    border: 2px solid slategrey;
     border-top: 0;
   }
 </style>

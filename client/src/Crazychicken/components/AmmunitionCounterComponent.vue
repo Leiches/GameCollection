@@ -24,7 +24,9 @@ defineProps({
     display: flex;
     position: absolute;
     bottom: 0;
-    margin: 10px;
+    margin: 2%;
     opacity: 50%;
+    width: 50%;
+    height: 30%;
   }
 </style>

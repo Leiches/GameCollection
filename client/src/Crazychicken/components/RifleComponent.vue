@@ -95,31 +95,31 @@ function shoot() {
 
 <style scoped>
 #rifle {
-  width: 40px;
-  height: 140px;
+  width: 4%;
+  height: 25%;
   position: absolute;
-  bottom: -20px;
+  bottom: -10%;
   background-color: #603e29;
   transform-origin: center bottom;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  border-top-left-radius: 15%;
+  border-top-right-radius: 15%;
 }
 #rifle-deco {
-  width: 20px;
-  height: 110px;
+  width: 50%;
+  height: 90%;
   position: relative;
-  left: 10px;
-  bottom: 10px;
+  left: 25%;
+  bottom: 15%;
   background-color: #736a6a;
   transform-origin: center bottom;
-  border-radius: 5px;
+  border-radius: 15%;
 }
 #blast {
   position: relative;
-  bottom: 115px;
-  left: -15px;
-  width: 50px;
-  height: 120px;
+  bottom: 110%;
+  left: -10%;
+  width: 120%;
+  height: 110%;
   background-color: #fff400;
   border-bottom-left-radius: 50%;
   border-bottom-right-radius: 50%;

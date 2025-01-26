@@ -29,16 +29,18 @@ const maxAmmo = 5;
 const isBlastVisible = ref(false);
 
 function spawnBird() {
-  const width = Math.random() * (50 - 30) + 30;
-  const height = Math.random() * (50 - 30) + 30;
+  const max: number = props.gameWindowWidth / 20;
+  const min: number = props.gameWindowWidth / 25;
+  const width = Math.random() * (max - min) + min;
+  const height = Math.random() * (max - min) + min;
 
   const startPoint: Point = {
-    x: Math.random() < 0.5 ? -50 : props.gameWindowWidth as number + 50,
+    x: Math.random() < 0.5 ? -max : props.gameWindowWidth as number + max,
     y: Math.random() * (props.gameWindowHeight as number - height),
   };
 
   const endPoint: Point = {
-    x: startPoint.x === -50 ? props.gameWindowWidth as number + 50 : -50,
+    x: startPoint.x === -max ? props.gameWindowWidth as number + max : -max,
     y: Math.random() * (props.gameWindowHeight as number - height),
   };
 
@@ -205,8 +207,17 @@ function handleAmmoDecrement() {
 #game-window {
   position: relative;
   width: 900px;
-  height: 675px;
+  height: 625px;
   background-color: lightgray;
   overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  #game-window {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  }
 }
 </style>
