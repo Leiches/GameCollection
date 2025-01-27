@@ -39,6 +39,10 @@
             if (timelineRef.value) {
                 
                 const rect = timelineRef.value.getBoundingClientRect();
+
+                if (rect.width === 0) {
+                    return; 
+                }
                 
                 posXYearGuess.value = event.clientX - rect.left;
 
@@ -104,10 +108,19 @@
     }
 
     const handleMouseLeave = () => {
-    if (!isLocked.value) {
-        showYearGuess.value = false;
-    }
-};
+        if (!isLocked.value) {
+            showYearGuess.value = false;
+        }
+    };
+
+    defineExpose({
+    yearGuess,
+    getYear,
+    lockYear,
+    isLocked,
+    showDifference,
+    showYearGuess,
+    })
 </script>
 
 <template>
