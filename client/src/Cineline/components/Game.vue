@@ -41,23 +41,54 @@
 
     const emit = defineEmits(['endGame']);
 
-    await axios.get('http://localhost:8080/CineLine')
-    .then((data) => {
+    async function fetchTopRatedMovies() {
+      console.log("Fetching top-rated movies...");
+
+      const options = {
+        headers: {
+          accept: 'application/json',
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNjhmYzJiNTMyYjYwOGZmZTUwZDVjNzI5YzNjNjhkNiIsIm5iZiI6MTczNzM3ODUzMi42OTcsInN1YiI6IjY3OGU0YWU0MWMzNDFjODg5OTZkZTc5MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.b4jj-URqxALB3OvK2jJucywyDFLM_m_7WNkJzR6uB_4'
+        }
+      };
+
+      const apiUrls = [
+        'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1',
+        'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=2',
+        'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=3',
+        'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=4',
+        'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=5'
+      ];
+
+      try {
+        const apiRequests = apiUrls.map(url => axios.get(url, options));
+        const responses = await Promise.all(apiRequests);
+
+        // Combine all data into a single array
+        const combinedData = responses.map(response => response.data);
+        return combinedData;
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        throw new Error('Failed to fetch top-rated movies');
+      }
+    }
+
+    fetchTopRatedMovies()
+      .then((data) => {
         console.log("data:");
         console.log(data);
-        movieStore.movies = data.data
-                            .flatMap((movies: MovieList) => movies.results
-                            .map((movie: Movie) => ({
-                                title: movie.title, 
-                                year: new Date(movie.release_date).getFullYear(), 
-                                poster_path: 'https://image.tmdb.org/t/p/w400/' + movie.poster_path
-                            })))
-                            .sort(() => Math.random() - 0.5)
-                            .slice(0, 10);
-    })
-    .catch((error) => {
+        movieStore.movies = data
+          .flatMap((movies) => movies.results
+            .map((movie) => ({
+              title: movie.title,
+              year: new Date(movie.release_date).getFullYear(),
+              poster_path: 'https://image.tmdb.org/t/p/w400/' + movie.poster_path
+            })))
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 10);
+      })
+      .catch((error) => {
         console.error('Error fetching data:', error);
-    });
+      });
 
     const nextMovie = (): void => {
 
@@ -87,11 +118,11 @@
             const diff = Math.abs(movieStore.movies[roundCount.value - 1].year - yearGuess);
             const startScore = score.value;
             const endScore = score.value - diff;
-            
+
             const step = (timestamp: number) => {
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
                 score.value = Math.round(startScore + (endScore - startScore) * progress);
-                
+
                 if (progress < 1) {
                     requestAnimationFrame(step);
                 } else {
@@ -99,7 +130,7 @@
                     showButton.value = true;
                 }
             };
-            
+
             requestAnimationFrame(step);
         }
     };
@@ -109,7 +140,7 @@
 
 <template>
     <div class="cineline-container">
-        <div class="game-info">    
+        <div class="game-info">
             <h1>Movie {{ roundCount }} of {{ movieStore.movies?.length }}</h1>
             <h1>Score: {{ score }}</h1>
             <button v-show="showButton" @click="nextMovie" >Next Movie</button>

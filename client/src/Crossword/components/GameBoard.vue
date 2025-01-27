@@ -35,18 +35,39 @@
 
 <script setup lang="ts">
 import { ref, nextTick } from 'vue'
-import axios from 'axios'
-let puzzleData;
-const isPuzzleWon = ref(false);
-await axios.get('http://localhost:8080/Crossword')
-  .then((data) => {
-    //console.log("data:");
-    //console.log(data);
-    puzzleData = data.data;
-  })
-  .catch((error) => {
-    console.error('Error fetching data:', error);
-  });
+
+
+import { data as crosswordData } from '../data/data.js'
+
+
+function fetchAndProcessCrosswordData() {
+  try {
+    if (!Array.isArray(crosswordData) || !crosswordData.length) {
+      throw new Error('Data array is empty or not properly formatted');
+    }
+    console.log(`Total entries: ${crosswordData.length}`);
+
+
+    const shuffledData = crosswordData.sort(() => Math.random() - 0.5).slice(0, 500);
+
+    console.log(shuffledData);
+    return shuffledData;
+  } catch (error) {
+    console.error('Error processing data:', error);
+    return [];
+  }
+}
+
+let puzzleData = fetchAndProcessCrosswordData();
+
+if (puzzleData.length) {
+  console.log('Processed crossword data:', puzzleData);
+} else {
+  console.warn('No crossword data processed.');
+}
+
+
+const isPuzzleWon = ref(false)
 
 function insert(grid, clue, cluePos, word, x, y) {
   let start = 0;
@@ -95,7 +116,6 @@ function insert(grid, clue, cluePos, word, x, y) {
   }
   return grid;
 }
-
 
 function canPlace(grid, clue, cluePos, word, x, y) {
   let direction = "";
@@ -146,68 +166,50 @@ function canPlace(grid, clue, cluePos, word, x, y) {
   return true;
 }
 
-let crosswordGrid = [
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""]]
+let crosswordGrid = Array(15).fill(null).map(() => Array(15).fill(""));
 
-//const filteredData = puzzleData.filter(item => /^Z.M..T$/i.test(item.answer) && item.answer.length === 6);
 let inserted = [];
-crosswordGrid = insert(crosswordGrid, puzzleData[0].question, "ad", puzzleData[0].answer, 1, 0);
-inserted.push(puzzleData.filter(item => item.question === puzzleData[0].question)[0]);
-inserted[0].dir = "ad";
-inserted[0].x = 1;
-inserted[0].y = 0;
-puzzleData = puzzleData.filter(item => item.question !== puzzleData[0].question);
 
-//console.log(inserted);
+
+crosswordGrid = insert(crosswordGrid, puzzleData[0].question, "ad", puzzleData[0].answer, 1, 0);
+inserted.push({
+  ...puzzleData[0],
+  dir: "ad",
+  x: 1,
+  y: 0
+});
+puzzleData = puzzleData.filter(item => item.question !== puzzleData[0].question);
 
 let tries = 0;
 
-while (true){
+while (true) {
   for (let i = 1; i < inserted[0].answer.length; i++){
-
     let filteredData = puzzleData.filter(item => item.answer.startsWith(inserted[0].answer[i]));
 
     if (inserted[0].dir == "ad"){
-
       for (let k = 0; k < filteredData.length; k++){
         if (canPlace(crosswordGrid, filteredData[k].question, "lr", filteredData[k].answer, inserted[0].x -1, i +1)) {
           crosswordGrid = insert(crosswordGrid, filteredData[k].question, "lr", filteredData[k].answer, inserted[0].x -1, i+1);
-          let item = puzzleData.filter(item => item.question === filteredData[k].question)[0];
+          let item = puzzleData.find(item => item.question === filteredData[k].question);
           item.dir = "lr";
           item.x = inserted[0].x - 1;
           item.y = i + 1;
           inserted.push(item);
-          puzzleData = puzzleData.filter(item => item.question !== filteredData[k].question);
+          puzzleData = puzzleData.filter(p => p.question !== filteredData[k].question);
           break;
         }
       }
-
     }
     if (inserted[0].dir == "lr"){
-
       for (let k = 0; k < filteredData.length; k++){
         if (canPlace(crosswordGrid, filteredData[k].question, "ad", filteredData[k].answer, i + 1, inserted[0].y-1)) {
-          crosswordGrid = insert(crosswordGrid, filteredData[k].question, "ad", filteredData[k].answer, i +1, inserted[0].y-1);
-          let item = puzzleData.filter(item => item.question === filteredData[k].question)[0];
-          item.dir = "lr";
-          item.x = i + 2;
-          item.y = inserted[0].x - 1;
+          crosswordGrid = insert(crosswordGrid, filteredData[k].question, "ad", filteredData[k].answer, i + 1, inserted[0].y-1);
+          let item = puzzleData.find(item => item.question === filteredData[k].question);
+          item.dir = "ad";
+          item.x = i + 1;
+          item.y = inserted[0].y - 1;
           inserted.push(item);
-          puzzleData = puzzleData.filter(item => item.question !== filteredData[k].question);
+          puzzleData = puzzleData.filter(p => p.question !== filteredData[k].question);
           break;
         }
       }
@@ -219,22 +221,7 @@ while (true){
   }
 }
 
-let playGrid = [
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""],
-  ["","","","","","","","","","","","","","",""]]
+let playGrid = Array(15).fill(null).map(() => Array(15).fill(""));
 
 function fillEmptyCells(grid) {
   for (let row = 0; row < crosswordGrid.length; row++) {
@@ -253,16 +240,16 @@ function fillEmptyCells(grid) {
 fillEmptyCells(playGrid);
 console.log(crosswordGrid);
 
+
+
 const selectedCell = ref<{ row: number; col: number } | null>(null)
-
 const cellRefs = ref<Record<string, HTMLInputElement | null>>({})
-
 
 function setCellRef(el: HTMLInputElement | null, row: number, col: number) {
   const key = `${row}-${col}`
   if (el) {
     cellRefs.value[key] = el
-    // If this is the selected cell, focus right away
+
     if (selectedCell.value?.row === row && selectedCell.value?.col === col) {
       el.focus()
     }
@@ -271,11 +258,10 @@ function setCellRef(el: HTMLInputElement | null, row: number, col: number) {
   }
 }
 
-
 function selectCell(row: number, col: number) {
   if (playGrid[row][col] === 'black') return
   selectedCell.value = { row, col }
-  // Wait for DOM to render input, then focus it
+
   nextTick(() => {
     const key = `${row}-${col}`
     if (cellRefs.value[key]) {
@@ -294,9 +280,7 @@ function isWon() {
         if (playerCell !== "black") {
           return false
         }
-      }
-
-      else {
+      } else {
         if (playerCell !== solutionCell) {
           return false
         }
@@ -306,12 +290,9 @@ function isWon() {
   return true
 }
 
-
 function deselectCell() {
   selectedCell.value = null
-  //console.log("Deselected Cell!")
-
-  if(isWon()){
+  if (isWon()) {
     console.log("You Won!");
     isPuzzleWon.value = true;
   }
@@ -341,7 +322,6 @@ function handleInput(event: Event, row: number, col: number) {
   display: grid;
   grid-template-columns: repeat(15, 60px);
   grid-template-rows: repeat(15, 60px);
-
 }
 
 .cell {
@@ -369,7 +349,6 @@ function handleInput(event: Event, row: number, col: number) {
   background-color: #ddd;
 }
 
-
 .cell span {
   font-size: min(1em, 4vw);
   width: fit-content;
@@ -382,6 +361,7 @@ function handleInput(event: Event, row: number, col: number) {
 .cell span:empty::before {
   content: "\00a0";
 }
+
 .clue-cell {
   background-color: #afa7a7;
   user-select: none;
@@ -389,9 +369,11 @@ function handleInput(event: Event, row: number, col: number) {
   font-size: 6px;
   color: black;
 }
+
 .won-cell {
   background-color: #d4f3d4 !important;
 }
+
 .cell-input {
   width: 100%;
   height: 100%;

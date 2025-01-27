@@ -112,21 +112,21 @@ app.get('/Crossword', (req, res) => {
             });
 
             res.json(finalData);
-            /*
-                        const maxLength = 14;
-                        const filteredData = jsonData.filter(item => item.answer.length <= maxLength);
 
+            const maxLength = 10;
+            const filteredData = jsonData.filter(item => item.answer.length <= maxLength);
 
-                        const outputFile = 'filtered_puzzle_data.txt';
-                        fs.writeFile(outputFile, JSON.stringify(filteredData, null, 2), (err) => {
-                            if (err) {
-                                console.error('Error writing file:', err);
-                            } else {
-                                console.log(`Filtered data written to ${outputFile}`);
-                            }
-                        });
+            const secondfilter = filteredData.filter(item => item.question.length <= 8);
 
-             */
+            const outputFile = 'filtered_puzzle_data.txt';
+            fs.writeFile(outputFile, JSON.stringify(secondfilter, null, 2), (err) => {
+                if (err) {
+                    console.error('Error writing file:', err);
+                } else {
+                    console.log(`Filtered data written to ${outputFile}`);
+                }
+            });
+
 
         } catch (parseError) {
             console.error('Error parsing JSON:', parseError);

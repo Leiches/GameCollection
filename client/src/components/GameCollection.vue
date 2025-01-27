@@ -1,28 +1,13 @@
 <script setup lang="ts">
 import { useUserStore } from '@/store/user'
 import { ref, onMounted } from 'vue';
-import { io } from 'socket.io-client';
 const showGames = ref(false);
 const userStore = useUserStore()
 
 const text = ref('');
 const messages = ref([]);
-let socket;
 
-const clickHandler = () => {
-  if (socket) {
-    socket.emit('message', `${userStore.userName}: ${text.value}`);
-    text.value = '';
-  }
-};
 
-const connectToChat = () => {
-  socket = io('http://localhost:9992');
-  socket.on('message', (data) => {
-    messages.value.push(data);
-  });
-  socket.emit('message', `${userStore.userName} Joined!`);
-};
 
 </script>
 
@@ -32,9 +17,9 @@ const connectToChat = () => {
     <div>
       <div>
         <label for="firstName">Name:</label>
-        <input type="text" id="firstName" v-model="userStore.userName" @keyup.enter="showGames = true; connectToChat();"/>
+        <input type="text" id="firstName" v-model="userStore.userName" @keyup.enter="showGames = true;"/>
       </div>
-      <button :disabled="userStore.userName == ''" @click="showGames = true; connectToChat();" >Play Games</button>
+      <button :disabled="userStore.userName == ''" @click="showGames = true;" >Play Games</button>
     </div>
   </div>
   <div v-if="showGames">
@@ -47,13 +32,6 @@ const connectToChat = () => {
       <router-link to="/Crossword/play">Play Daily Crossword</router-link>
       <router-link to="/CineLine/splashscreen">Play CineLine</router-link>
     </main>
-    <div>
-      <p><input v-model="text" @keyup.enter="clickHandler"><button @click="clickHandler">Send</button></p>
-      <p v-if="messages.length == 0">No messages yet.</p>
-      <ul v-else>
-        <li v-for="msg in messages">{{ msg }}</li>
-      </ul>
-    </div>
   </div>
 </template>
 
