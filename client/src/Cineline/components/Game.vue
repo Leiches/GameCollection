@@ -33,11 +33,13 @@
     const router = useRouter()
 
     const roundCount = ref(1)
-    const score = ref(0)
+    const score = ref(1000)
     const showYear = ref(false)
     const showButton = ref(false)
 
     const movieStore = useMovieStore()
+
+    const emit = defineEmits(['endGame']);
 
     await axios.get('http://localhost:8080/CineLine')
     .then((data) => {
@@ -68,7 +70,8 @@
                 showButton.value = false;
             }
             else {
-                router.push('/CineLine/endscreen')
+                emit('endGame', score.value);
+                //router.push('/CineLine/endscreen')
             }
         }
     }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-interface Movie {
+    interface Movie {
         title: string;
         poster_path: string;
         year: number;
