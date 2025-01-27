@@ -3,9 +3,11 @@
 
     const props = defineProps<{
         correctYear: number
+        currentRound: number
     }>()
 
-    watch(() => props.correctYear, () => {
+    watch(() => props.currentRound, () => {
+        showDifference.value = false
         isLocked.value = false
         showYearGuess.value = false
 
@@ -18,6 +20,7 @@
     const emit = defineEmits(['selectYear']);
 
     const showYearGuess = ref(false);
+    const showDifference = ref(false)
     const timelineRef = ref<HTMLElement | null>(null);
     const yearGuess = ref(2025)
     const posXYearGuess = ref(0)
@@ -75,6 +78,7 @@
 
         if (yearGuess.value != props.correctYear) {
             if (timelineRef.value) {
+                showDifference.value = true;
                 const rect = timelineRef.value.getBoundingClientRect();
                 
                 const xPosYearGuess = Math.round(((yearGuess.value - 1900) * (rect.width - 0) / (2025 - 1900)) + 0);
@@ -111,7 +115,11 @@
         <h1>1900</h1>
         <div ref="timelineRef" class="timeline" @mouseover="showYearGuess = true" @mouseleave="handleMouseLeave" @mousemove="getYear" @click="lockYear">
             <h1 class="year-correct" :style="transitionX ? {left: posXCorrectYear + 'px', transition: '2s' } : {visibility: 'hidden', left: posXCorrectYear + 'px' }" >{{ animatedYear }}</h1>
-            <div class="timeline-section" :style="useRight ? { right: timelineSectionRight + 'px', width: timelineSectionWidth + 'px'} : { left: timelineSectionLeft + 'px', width: timelineSectionWidth + 'px'}"></div>
+            <div class="timeline-difference" 
+            :style="useRight 
+                ? (showDifference ? { right: timelineSectionRight + 'px', width: timelineSectionWidth + 'px'} : {visibility: 'hidden', right: timelineSectionRight + 'px', width: timelineSectionWidth + 'px'}) 
+                : (showDifference ? { left: timelineSectionLeft + 'px', width: timelineSectionWidth + 'px'} : {visibility: 'hidden', left: timelineSectionLeft + 'px', width: timelineSectionWidth + 'px'})"
+            ></div>
             <h1 class="year-guess" v-show="showYearGuess" :style="{ left: posXYearGuess + 'px' }" >{{ yearGuess }}</h1>
         </div>
         <h1>2025</h1>
@@ -137,7 +145,7 @@
         margin: 16px;
     }
 
-    .timeline-section {
+    .timeline-difference {
         position: absolute;
         height: 100%;
         background-color: red;

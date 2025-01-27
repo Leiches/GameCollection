@@ -112,7 +112,7 @@
             <button v-show="showButton" @click="nextMovie" >Next Movie</button>
         </div>
         <Movie :showYear="showYear" :movie="movieStore.movies ? movieStore.movies[roundCount - 1] : {title: 'unknown', poster_path: 'unknown', year: 2025}"/>
-        <Timeline @selectYear="updateScore" :correctYear="movieStore.movies ? movieStore.movies[roundCount - 1].year : 2025"/>
+        <Timeline @selectYear="updateScore" :currentRound="roundCount" :correctYear="movieStore.movies ? movieStore.movies[roundCount - 1].year : 2025"/>
     </div>
 </template>
 
