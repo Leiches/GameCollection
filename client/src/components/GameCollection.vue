@@ -45,6 +45,7 @@ const connectToChat = () => {
       <router-link to="/Sudoku/play">Play Sudoku</router-link>
       <router-link to="/CrazyChicken">Play Crazy Chicken</router-link>
       <router-link to="/Crossword/play">Play Daily Crossword</router-link>
+      <router-link to="/CineLine/splashscreen">Play CineLine</router-link>
     </main>
     <div>
       <p><input v-model="text" @keyup.enter="clickHandler"><button @click="clickHandler">Send</button></p>
