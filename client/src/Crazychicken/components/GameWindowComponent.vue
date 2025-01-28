@@ -28,12 +28,15 @@ const maxAmmo = 5;
 
 const isBlastVisible = ref(false);
 
+// Spawns a bird at a random location
 function spawnBird() {
+  // Create random width and height based on window size
   const max: number = props.gameWindowWidth as number/ 20;
   const min: number = props.gameWindowWidth as number/ 25;
   const width = Math.random() * (max - min) + min;
   const height = Math.random() * (max - min) + min;
 
+  // sets start and endpoint outside the visible playing field
   const startPoint: Point = {
     x: Math.random() < 0.5 ? -max : props.gameWindowWidth as number + max,
     y: Math.random() * (props.gameWindowHeight as number - height),
@@ -47,6 +50,7 @@ function spawnBird() {
   let isBadBird: boolean;
   let randomColor;
 
+  // Creates a "bad" bird in 10% of cases that harms the player when shooting it
   if (Math.random() < 0.9) {
     randomColor = randomRange(birdColors);
     isBadBird = false;
@@ -54,11 +58,13 @@ function spawnBird() {
     randomColor = '#ff0000'
     isBadBird = true;
   }
+
+  // sets random speed
   const speed = Math.random() * (0.01- 0.005) + 0.005;
 
   const diffRand: number = Math.random();
   let difficulty: number = 0;
-
+  // Sets random bird difficulty (Based on the number of "control points" in bezier curve)
   if (diffRand < 0.6) {
     difficulty = 1;
   } else if (diffRand < 0.8) {
@@ -80,12 +86,15 @@ function spawnBird() {
     difficulty,
     isBadBird
   );
+  // adds the new bird to the linked list
   birds.insertEnd(b);
 }
 
+// play shoot "animation"
 function shoot() {
   if (ammoLeft.value > 0) {
     ammoLeft.value--; // Decrease ammo
+    // Play gun sound
     const audio = new Audio('src/Crazychicken/assets/rifle-gunshot-99749.mp3');
     audio.volume = 0.4;
     audio.play();
@@ -97,18 +106,24 @@ function shoot() {
   }
 }
 
+// takes a bird and destroys it
 function destroy(bird: any) {
   if (ammoLeft.value > 0) {
+    // Find bird in linked list
     const node = birds.search((n) => n === bird);
     if (node) {
+      // Delete it
       birds.delete(node);
+      // Decrease score and ammo if it was a bad bird
       if (bird.isBadBird) {
         score.value -= 5;
         if (score.value < 0) {
           score.value = 0;
           ammoLeft.value--;
         }
-      } else {
+      }
+      // Increase score and ammo by 1 if it was a good bird
+      else {
         score.value++;
         if (ammoLeft.value < maxAmmo) {
           ammoLeft.value++;
@@ -117,6 +132,7 @@ function destroy(bird: any) {
 
       }
     }
+    // Play the shoot animation
     shoot();
   }
 }
@@ -141,6 +157,7 @@ onMounted(() => {
 
     for (const bird of birdsArr) {
       bird.move(); // 16ms time delta for 60FPS
+      // Despawn birds when they leave the screen / Reach their endpoint
       if (
         bird.progress >= 1 ||
         bird.currentPoint.x < -80 ||
@@ -150,6 +167,9 @@ onMounted(() => {
       }
     }
 
+    /* Deletes all birds in the birdsToDelete array
+    *  This is done here for ease of use and because it worked smoother
+    * */
     for (const bird of birdsToDelete) {
       const node = birds.search((n) => n === bird);
       if (node) {
@@ -157,6 +177,7 @@ onMounted(() => {
       }
     }
 
+    // Sends gameover signal if there is no ammunition left
     if (ammoLeft.value == 0) {
       emit("gameover", score.value);
     }
@@ -164,6 +185,7 @@ onMounted(() => {
   }, 16);
 });
 
+// Decreases ammo if a shot misses its target
 function handleAmmoDecrement() {
   if (ammoLeft.value > 0) {
     ammoLeft.value--;
@@ -179,6 +201,7 @@ function handleAmmoDecrement() {
 <template>
 
   <div id="game-window">
+    <!-- Rifle Component that can play the shoot animation and devrease ammo -->
     <RifleComponent
       :game-window-width="gameWindowWidth"
       :game-window-height="gameWindowHeight"
@@ -187,7 +210,9 @@ function handleAmmoDecrement() {
       @click="shoot"
       @decrement-ammo="handleAmmoDecrement"
     ></RifleComponent>
+    <!-- UI to display the remaining ammunition -->
     <AmmunitionCounterComponent :ammo-left="ammoLeft"></AmmunitionCounterComponent>
+    <!-- Loop through bird components and update their positions / destroy them when clicked on-->
     <BirdComponent
       v-for="(bird, index) in birds.traverse()"
       :key="index"
@@ -199,6 +224,7 @@ function handleAmmoDecrement() {
       @click="destroy(bird)"
     >
     </BirdComponent>
+    <!-- UI to display the current score -->
     <ScoreBoxComponent :score="score"></ScoreBoxComponent>
   </div>
 </template>
@@ -213,6 +239,7 @@ function handleAmmoDecrement() {
   overflow: hidden;
 }
 
+/* Adjust window size and position on smaller screens */
 @media (max-width: 900px) {
   #game-window {
     top: 0;

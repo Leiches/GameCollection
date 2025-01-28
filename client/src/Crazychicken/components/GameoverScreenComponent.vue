@@ -15,13 +15,16 @@ const emit = defineEmits(["restartGame", "back"]);
 onMounted(async () => {
   const gameName = "CrazyChicken";
 
+  // Loads highScore from backend
   highScore.value = await loadHighScore(gameName);
 
+  // Checks whether the new score is higher than the high score and saves it if this is the case
   if (props.score > (highScore.value || 0) || highScore.value === 0) {
     await saveHighScore(gameName, props.score as number);
     highScore.value = props.score;
   }
 
+  // Gets the leaderboard for the game and sorts it
   const scores = await fetchLeaderboard(gameName);
   if (scores && typeof scores === "object") {
     leaderboard.value = Object.entries(scores)
@@ -31,9 +34,6 @@ onMounted(async () => {
     leaderboard.value = [];
   }
 });
-
-
-
 </script>
 
 <template>
@@ -111,6 +111,7 @@ onMounted(async () => {
   border-radius: 10%;
 }
 
+/* Adapted leaderboard positions on smaller screens */
 @media (max-width: 1100px) {
   #leaderboard {
     position: static;
@@ -136,6 +137,7 @@ onMounted(async () => {
     width: 40%;
   }
 
+  /* Additionally reallign buttons by increasing the margin betwenn the upper restart button and the score h1s */
   #restart {
     margin-top: 10%;
   }

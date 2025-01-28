@@ -11,11 +11,13 @@ const props = defineProps({
 
 const emit = defineEmits(["decrement-ammo"]);
 
+// Create aim layers to manage rifle rotation
 const upperAimLayers: string[] = ['top-left', 'center', 'top-right']
 const lowerAimLayers: string[] = ['bottom-left', 'center', 'bottom-right']
 
 const angle = ref(0);
 
+// Adjust rotation according to the active layer
 function aim(aimLayer: string) {
   if (aimLayer === 'bottom-left') {
     angle.value = 300
@@ -32,6 +34,7 @@ function aim(aimLayer: string) {
 
 let localIsBlastVisible = false;
 
+// Own shoot function for local use
 function shoot() {
   if (props.ammoLeft as number > 0)
   {
@@ -43,6 +46,7 @@ function shoot() {
       localIsBlastVisible = false;
     }, 500);
 
+    // Inform game window of decrease in ammunition
     emit("decrement-ammo");
   }
 
@@ -50,6 +54,8 @@ function shoot() {
 </script>
 
 <template>
+  <!-- Create aim layers, decision for six layers in total for usability, for a moment a drastically higher amount
+  was considered but quickly discarded because of performance considerations -->
   <AimLayerComponent
     v-for="(aimLayer, index) in upperAimLayers"
     :key="index"
@@ -74,6 +80,7 @@ function shoot() {
     @click="shoot"
   >
   </AimLayerComponent>
+  <!-- Draw the actual rifle component -->
   <div
     id="rifle"
     :style="{
@@ -84,6 +91,7 @@ function shoot() {
     <div
       id="rifle-deco"
     >
+      <!-- Blast with conditional visibility -->
       <div
         id="blast"
         v-if="isBlastVisible || localIsBlastVisible"

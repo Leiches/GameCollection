@@ -1,4 +1,5 @@
-﻿<script setup lang="ts">
+﻿Creates AmmunitionComponents based on the amount of ammo left
+<script setup lang="ts">
 import AmmunitionComponent from "@/Crazychicken/components/AmmunitionComponent.vue";
 
 defineProps({

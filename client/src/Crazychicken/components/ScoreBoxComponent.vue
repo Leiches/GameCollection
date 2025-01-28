@@ -1,4 +1,5 @@
-﻿<script setup lang="ts">
+﻿Simple score box
+<script setup lang="ts">
 defineProps({
   score: Number,
 })
