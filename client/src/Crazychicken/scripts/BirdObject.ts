@@ -1,5 +1,6 @@
-﻿import type { Point } from "@/CrazyChicken/utils/custom-types/Point";
+﻿import type { Point } from "@/Crazychicken/utils/custom-types/Point";
 
+// BirdObject for better managing of the targets
 export class BirdObject {
   width: number;
   height: number;
@@ -36,11 +37,13 @@ export class BirdObject {
     this.difficulty = difficulty;
     this.isBadBird = isBadBird;
 
+    // Calculates distance between start and end point
     const distance = Math.sqrt(
       Math.pow(endPoint.x - startPoint.x, 2) +
       Math.pow(endPoint.y - startPoint.y, 2),
     );
 
+    // Generate control points for curve calculation
     this.controlPoints = this.generateControlPoints(
       startPoint,
       endPoint,
@@ -53,6 +56,7 @@ export class BirdObject {
     this.speed = speed;
   }
 
+  // Generate control points
   private generateControlPoints(
     startPoint: Point,
     endPoint: Point,
@@ -62,11 +66,13 @@ export class BirdObject {
   ): Point[] {
     const controlPoints: Point[] = [];
 
+    // Generate i amount of points between start and end based on difficulty
     for (let i = 1; i < difficulty; i++) {
       const t = i / difficulty;
       const x = startPoint.x * (1 - t) + endPoint.x * t;
       let y = startPoint.y * (1 - t) + endPoint.y * t;
 
+      // Creates an offset for "interesting" curves
       const verticalOffset = Math.max(distance * 0.2, 50);
       y -= verticalOffset * (i % 2 === 0 ? -1 : 1);
 
@@ -78,11 +84,13 @@ export class BirdObject {
     return controlPoints;
   }
 
+  // creates a path based on the control points
   private calculateBezierPoint(): void {
     const t = this.progress;
     const points = [this.startPoint, ...this.controlPoints, this.endPoint];
 
     // De Casteljau's algorithm for Bezier curves
+    // Calculate a point based on progress t along a bezier curve
     const calculateRecursive = (pts: Point[], t: number): Point => {
       if (pts.length === 1) return pts[0];
 
@@ -98,6 +106,7 @@ export class BirdObject {
     this.currentPoint = calculateRecursive(points, t);
   }
 
+  // Moves the object along its path
   public move(): void {
     if (this.progress < 1) {
       this.calculateBezierPoint();

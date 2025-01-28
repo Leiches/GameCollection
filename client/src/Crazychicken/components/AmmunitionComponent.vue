@@ -1,4 +1,5 @@
-﻿<script setup lang="ts">
+﻿Creates a simple graphic for display within the ammunition counter
+<script setup lang="ts">
 defineProps({
   xCoordinate: Number,
   yCoordinate: Number,

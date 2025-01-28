@@ -1,4 +1,5 @@
-﻿<script setup lang="ts">
+﻿Overall viewport for all that is displayed in crazy chicken
+<script setup lang="ts">
 import {onMounted, ref} from "vue"
 import GameWindow from "@/Crazychicken/components/GameWindowComponent.vue";
 import GameoverScreenComponent from "@/Crazychicken/components/GameoverScreenComponent.vue";
@@ -13,6 +14,7 @@ const viewportHeight = ref(0);
 
 const isVertical = ref(false);
 
+// Set viewport width and value based on client rect
 onMounted(() => {
   const gameWindow = document.getElementById('viewport');
   if (gameWindow) {
@@ -21,20 +23,24 @@ onMounted(() => {
     viewportHeight.value = rect.height;
   }
 
+  // set vertical screen to true if width is smaller than height
   if (viewportWidth.value < viewportHeight.value) {
     isVertical.value = true;
   }
 })
 
+// updates isPlaying and sets score when gameover is received from GameWindowComponent
 function setGameOver(newScore: number): void {
   isPlaying.value = !isPlaying.value
   score.value = newScore;
 }
 
+// Restarts the game
 function restartGame(): void {
   isPlaying.value = !isPlaying.value;
 }
 
+// Brings the player back to the main menu
 function goBackToMenu(): void {
   router.push('/');
 }
@@ -42,6 +48,7 @@ function goBackToMenu(): void {
 
 <template>
   <div id="viewport">
+    <!-- display for screens with invalid ratios -->
     <div
       v-if="isVertical"
     >

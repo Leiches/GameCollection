@@ -1,11 +1,12 @@
-﻿<script setup lang="ts">
-defineProps({
-  width: Number,
-  height: Number,
-  xCoordinate: Number,
-  yCoordinate: Number,
-  positionIdentifier: String,
-})
+﻿Creates an invisible layer for reference for the rifle orientation
+<script setup lang="ts">
+  defineProps({
+    width: Number,
+    height: Number,
+    xCoordinate: Number,
+    yCoordinate: Number,
+    positionIdentifier: String,
+  })
 </script>
 
 <template>

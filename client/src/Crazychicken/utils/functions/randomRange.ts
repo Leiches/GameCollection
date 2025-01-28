@@ -1,4 +1,6 @@
-﻿export function randomRange<T>(values: T[]): T {
+﻿
+// Get a random value out of an array
+export function randomRange<T>(values: T[]): T {
   if (values.length === 0) {
     throw new Error("The array is empty. Cannot select a random value.");
   }

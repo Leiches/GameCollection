@@ -1,5 +1,6 @@
-﻿import {Node} from "@/CrazyChicken/utils/custom-types/Node";
+﻿import {Node} from "@/Crazychicken/utils/custom-types/Node";
 
+// interface for the creation of the LinkedList
 export interface ILinkedList<T> {
   insertStart(data: T): Node<T>;
   insertEnd(data: T): Node<T>;

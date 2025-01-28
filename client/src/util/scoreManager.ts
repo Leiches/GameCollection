@@ -3,7 +3,7 @@
 /*
 * For user references look at client/src/CrazyChicken/components/GameoverScreenComponent.vue
 */
-//Needs game name and score
+//Needs game name and score and tries to save it via user.ts
 export async function saveHighScore(gameName: string, score: number): Promise<void> {
   const userStore = useUserStore();
 
@@ -16,6 +16,7 @@ export async function saveHighScore(gameName: string, score: number): Promise<vo
 }
 
 // Just enter the game name and call it
+// Used to load the highscore for a given game
 export async function loadHighScore(gameName: string): Promise<number> {
   const userStore = useUserStore();
 
@@ -31,6 +32,7 @@ export async function loadHighScore(gameName: string): Promise<number> {
 }
 
 // Just enter the game name and call it
+// Loads the highscore of all the users
 export async function fetchLeaderboard(gameName: string): Promise<{ [userName: string]: number }> {
   const userStore = useUserStore();
 

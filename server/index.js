@@ -144,14 +144,18 @@ let highScores = {};
 app.post('/highscore', (req, res) => {
     const { userName, gameName, score } = req.body;
 
+    // Checks whether all required variables are defined
     if (!userName || !gameName || score === undefined) {
         return res.status(400).json({ error: 'Invalid request. Missing userName, gameName, or score.' });
     }
 
+    // Generates the game if no highScore has previously been saved
     if (!highScores[gameName]) {
         highScores[gameName] = {};
     }
 
+    // Creates a highScore for the user if the user wasn't saved for the game yet or replaces the old
+    // high score if the new one is higher
     if (!highScores[gameName][userName] || score > highScores[gameName][userName]) {
         highScores[gameName][userName] = score;
     }
@@ -164,31 +168,37 @@ app.post('/highscore', (req, res) => {
 app.get('/highscore/:gameName/:userName', (req, res) => {
     const { gameName, userName } = req.params;
 
-
+    // Checks whether all parameters are given
     if (!gameName || !userName) {
         return res.status(400).json({ error: 'Invalid request. Missing gameName or userName.' });
     }
 
+    // if the game doesn´t exist yet an empty object is created
     if (!highScores[gameName]) {
         highScores[gameName] = {};
     }
 
+    // Gets the corresponding value for game and user
     const highScore = highScores[gameName][userName] || 0;
 
     res.json({ highScore });
 });
 
+// Returns all high Scores
 app.get('/highscore/:gameName', (req, res) => {
     const { gameName } = req.params;
 
+    // Checks whether the game exists
     if (!gameName) {
         return res.status(400).json({ error: 'Invalid request. Missing gameName.' });
     }
 
+    // Checks whether there are high scores for this game
     if (!highScores[gameName]) {
         return res.status(404).json({ message: `No high scores found for game: ${gameName}.`, scores: {} });
     }
 
+    // If there are no problem all highscores are returned
     res.json({scores: highScores[gameName]});
 })
 

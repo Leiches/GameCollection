@@ -15,6 +15,7 @@ describe('useUserStore - High Score Management', () => {
     vi.clearAllMocks();
   });
 
+  // Tests whether the highscore is saved correctly
   describe('saveHighScore', () => {
     it('should save a high score successfully', async () => {
       const mockResponse = { ok: true, json: vi.fn().mockResolvedValue({ highScore: 100 }) };
@@ -33,6 +34,7 @@ describe('useUserStore - High Score Management', () => {
       expect(userStore.highScores[gameName]).toBe(100);
     });
 
+    // tests whether errors happen correctly
     it('should handle errors when saving a high score', async () => {
       const mockError = new Error('Failed to save high score');
       (global.fetch as vi.Mock).mockRejectedValue(mockError);
@@ -49,6 +51,7 @@ describe('useUserStore - High Score Management', () => {
     });
   });
 
+  // Tests whether a highscore can be loaded based on a user and game
   describe('loadHighScore', () => {
     it('should load a high score successfully', async () => {
       const mockResponse = { ok: true, json: vi.fn().mockResolvedValue({ highScore: 150 }) };

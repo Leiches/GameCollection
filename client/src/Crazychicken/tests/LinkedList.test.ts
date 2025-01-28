@@ -9,6 +9,7 @@ describe('LinkedList', () => {
     linkedList = new LinkedList<number>();
   });
 
+  // Test inserting at the start of the LinkedList
   describe('insertStart', () => {
     it('should insert a node at the start of the list', () => {
       const node = linkedList.insertStart(1);
@@ -23,6 +24,7 @@ describe('LinkedList', () => {
     });
   });
 
+  // Tests inserting at the end of a LinkedList
   describe('insertEnd', () => {
     it('should insert a node at the end of the list', () => {
       const node = linkedList.insertEnd(1);
@@ -37,6 +39,7 @@ describe('LinkedList', () => {
     });
   });
 
+  // Tests the delete functionality
   describe('delete', () => {
     it('should delete a node from the list', () => {
       const node1 = linkedList.insertEnd(1);
@@ -61,6 +64,7 @@ describe('LinkedList', () => {
     });
   });
 
+  // Tests looping through the LinkedList
   describe('traverse', () => {
     it('should return an array of all node data', () => {
       linkedList.insertEnd(1);
@@ -74,6 +78,7 @@ describe('LinkedList', () => {
     });
   });
 
+  // Tests whether the size is returned correctly
   describe('size', () => {
     it('should return the size of the list', () => {
       linkedList.insertEnd(1);
@@ -88,6 +93,7 @@ describe('LinkedList', () => {
     });
   });
 
+  // Tests whether a value is returned correctly/an error
   describe('search', () => {
     it('should return the node matching the comparator', () => {
       linkedList.insertEnd(1);
@@ -112,6 +118,7 @@ describe('LinkedList', () => {
     });
   });
 
+  // Tests the traverseNode to loop through all Nodes in the LinkedList
   describe('traverseNodes', () => {
     it('should log all nodes with their data, prev, and next', () => {
       console.log = vi.fn(); // Mock console.log

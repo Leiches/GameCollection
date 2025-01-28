@@ -10,8 +10,8 @@ describe('ViewportComponent - Screen Size Recognition', () => {
     routes: [],
   });
 
+  // Sets a boundingClientRect that is taller than it is wide
   beforeEach(() => {
-
     vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
       width: 500,
       height: 1000,
@@ -30,6 +30,7 @@ describe('ViewportComponent - Screen Size Recognition', () => {
     vi.clearAllMocks();
   });
 
+  // tests whether the correct warning appears
   it('should show the vertical warning when width < height', async () => {
 
     await wrapper.vm.$nextTick();
@@ -39,6 +40,7 @@ describe('ViewportComponent - Screen Size Recognition', () => {
     expect(warning.text()).toContain('This game works better in horizontal model');
   });
 
+  // Counter test to check that the warning doesn´t appear always
   it('should not show the vertical warning when width >= height', async () => {
 
     vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({

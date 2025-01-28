@@ -5,7 +5,7 @@ export const useUserStore = defineStore('user', () => {
   const userName = ref('')
   const highScores = ref<{ [gameName: string]: number }>({});
 
-
+  // Loads the highscore from a user for a certain game
   async function loadHighScore(gameName: string) {
     try {
       const url = `http://localhost:8080/highscore/${gameName}/${userName.value}`;
@@ -25,6 +25,7 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  // Saves the highscore for the game in a json format consisiting of userName, gameName and score
   async function saveHighScore(gameName: string, score: number) {
     try {
       const response = await fetch('http://localhost:8080/highscore', {
@@ -44,6 +45,7 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  // Loads all highscores for the given game
   async function loadHighScores(gameName: string): Promise<{ [userName: string]: number }> {
     try {
       const url = `http://localhost:8080/highscore/${gameName}`;
