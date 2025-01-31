@@ -4,6 +4,8 @@ Team Members: Benedikt Scholz, Daniel Leichlinger, Moritz Alker
 
 Live Application:
 
+http://leiching.de7.fcomet.com/
+
 Purpose of the Application:
 This collection of games serves as a unified platform that combines several games into a single application. 
 Each game was developed by one of the group members and we have also included the Sudoku from the lecture.
