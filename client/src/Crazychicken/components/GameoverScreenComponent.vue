@@ -71,7 +71,7 @@ onMounted(async () => {
           <span class="score">{{ entry.score }}</span>
         </li>
       </ul>
-      <p v-else>No scores available yet.</p>
+      <p v-else>No scores available yet.</p><!-- Shows if there are problems with the backend / no bakend-->
     </div>
 
   </div>
