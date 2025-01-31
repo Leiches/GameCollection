@@ -13,3 +13,19 @@ CineLine is about guessing the release year of well-known films.
 A game consists of 10 rounds or films. And for each film, the user has to guess the year on the timeline. 
 To do this, the user must hover over the timeline with the cursor and click on the timeline to select a year. 
 The difference to the correct year of release is then deducted from the score, which starts at 1000.
+
+User Guide for the Game Crazy (by Benedikt Scholz):
+This recreation of the classic "Crazy Chicken" is an endless game. The game loop is rather simple, the player 
+needs to shoot the objects on the screen while avoiding the red ones. The development of the game also included
+custom-types for a linked-list as arrays were not smooth enough when it came to deleting components as well as a 
+highscore and leaderboard system which sadly relied on the backend and is therefore not included in the hosted site
+as we did not have a server for the backend.
+
+
+
+Local Run Guide:
+1. Choose the main branch and load the latests version
+2. Access the server folder and run it using "node index.js"
+3. Access the client folder and run it using "npm run dev"
+4. Press the link that appears in the console
+5. SUCCESS!
