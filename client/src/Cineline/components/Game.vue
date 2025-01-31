@@ -41,6 +41,7 @@
 
     const emit = defineEmits(['endGame']);
 
+    // fetches the 100 movies withe highest overall ratings from the api, shuffles their order and stores the first 10 of them
     await axios.get('http://localhost:8080/CineLine')
     .then((data) => {
         console.log("data:");
@@ -59,9 +60,11 @@
         console.error('Error fetching data:', error);
     });
 
+    // moves on to the next round/movie
     const nextMovie = (): void => {
 
         if (movieStore.movies) {
+            // if not all 10 movies/round are finished, the game continues
             if (roundCount.value < movieStore.movies?.length) {
 
                 roundCount.value += 1;
@@ -69,13 +72,14 @@
 
                 showButton.value = false;
             }
+            // if the last round is finished, the game ends
             else {
                 emit('endGame', score.value);
-                //router.push('/CineLine/endscreen')
             }
         }
     }
 
+    // updates the score
     const updateScore = (yearGuess: number) => {
 
         if (movieStore.movies) {
@@ -88,6 +92,7 @@
             const startScore = score.value;
             const endScore = score.value - diff;
             
+            // update animation
             const step = (timestamp: number) => {
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
                 score.value = Math.round(startScore + (endScore - startScore) * progress);

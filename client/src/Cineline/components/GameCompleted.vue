@@ -12,13 +12,16 @@
     onMounted(async () => {
         const gameName = "CineLine";
 
+        // Loads highScore from backend
         highScore.value = await loadHighScore(gameName);
 
+        // Checks whether the new score is higher than the high score and saves it if this is the case
         if (props.score > (highScore.value || 0) || highScore.value === 0) {
             await saveHighScore(gameName, props.score as number);
             highScore.value = props.score;
         }
 
+        // Gets the leaderboard for the game and sorts it
         const scores = await fetchLeaderboard(gameName);
         if (scores && typeof scores === "object") {
             leaderboard.value = Object.entries(scores)
