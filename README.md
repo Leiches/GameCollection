@@ -16,7 +16,7 @@ A game consists of 10 rounds or films. And for each film, the user has to guess 
 To do this, the user must hover over the timeline with the cursor and click on the timeline to select a year. 
 The difference to the correct year of release is then deducted from the score, which starts at 1000.
 
-User Guide for the Game Crazy (by Benedikt Scholz):
+User Guide for the Game Crazy Chicken (by Benedikt Scholz):
 This recreation of the classic "Crazy Chicken" is an endless game. The game loop is rather simple, the player 
 needs to shoot the objects on the screen while avoiding the red ones. The development of the game also included
 custom-types for a linked-list as arrays were not smooth enough when it came to deleting components as well as a 
