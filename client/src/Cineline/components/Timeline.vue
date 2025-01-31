@@ -134,7 +134,7 @@
 <template>
     <div class="timeline-container">
         <h1>1900</h1>
-        <div ref="timelineRef" class="timeline" @mouseover="showYearGuess = true" @mouseleave="handleMouseLeave" @mousemove="getYear" @click="lockYear">
+        <div ref="timelineRef" class="timeline" @mouseover="showYearGuess = true" @mouseleave="handleMouseLeave" @mousemove="getYear" @click="!isLocked ? lockYear : null">
             <h1 class="year-correct" :style="transitionX ? {left: posXCorrectYear + 'px', transition: '2s' } : {visibility: 'hidden', left: posXCorrectYear + 'px' }" >{{ animatedYear }}</h1>
             <div class="timeline-difference" 
             :style="useRight 
