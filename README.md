@@ -23,7 +23,10 @@ custom-types for a linked-list as arrays were not smooth enough when it came to 
 highscore and leaderboard system which sadly relied on the backend and is therefore not included in the hosted site
 as we did not have a server for the backend.
 
-
+User Guide for the Game Crossword (by Daniel Leichinger):
+Crossword puzzle is a classic game. To play just click on a cell and type a Letter. If everything is correct, the
+background color of the cell will become light green. When hosted localy with the node server the Game is a Daily Crossword puzzle, 
+because the Words get picked on the node server and there is a function that always picks the same words for a day.
 
 Local Run Guide:
 1. Choose the main branch and load the latests version
