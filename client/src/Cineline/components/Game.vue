@@ -113,31 +113,29 @@
 </script>
 
 <template>
-    <div class="cineline-container">
-        <div class="game-info">    
-            <h1>Movie {{ roundCount }} of {{ movieStore.movies?.length }}</h1>
-            <h1>Score: {{ score }}</h1>
-            <button v-show="showButton" @click="nextMovie" >Next Movie</button>
-        </div>
-        <Movie :showYear="showYear" :movie="movieStore.movies ? movieStore.movies[roundCount - 1] : {title: 'unknown', poster_path: 'unknown', year: 2025}"/>
-        <Timeline @selectYear="updateScore" :currentRound="roundCount" :correctYear="movieStore.movies ? movieStore.movies[roundCount - 1].year : 2025"/>
+    <div class="game-info">    
+        <h1>Movie {{ roundCount }} of {{ movieStore.movies?.length }}</h1>
+        <h1>Score: {{ score }}</h1>
+        <button class="green" v-show="showButton" @click="nextMovie" >Next Movie</button>
     </div>
+    <Movie :showYear="showYear" :movie="movieStore.movies ? movieStore.movies[roundCount - 1] : {title: 'unknown', poster_path: 'unknown', year: 2025}"/>
+    <Timeline @selectYear="updateScore" :currentRound="roundCount" :correctYear="movieStore.movies ? movieStore.movies[roundCount - 1].year : 2025"/>
 </template>
 
 <style>
-    .cineline-container {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
     .game-info {
         position: absolute;
-        top: 0;
-        left: 0;
+        top: 20px;
+        left: 20px;
+    }
+
+    button {
+        border: none;
+        padding: 0 !important;
+        background-color: transparent;
+    }
+
+    button:hover {
+        cursor: pointer;
     }
 </style>

@@ -79,35 +79,39 @@
 
     // locks the guessed year, when the user clicks on the timeline
     const lockYear = (): void => {
-        isLocked.value = true;
-        emit('selectYear', yearGuess.value);
 
-        // if the guessed year is not the actual year of publication
-        if (yearGuess.value != props.correctYear) {
-            if (timelineRef.value) {
-                showDifference.value = true;
-                const rect = timelineRef.value.getBoundingClientRect();
-                
-                const xPosYearGuess = Math.round(((yearGuess.value - 1900) * (rect.width - 0) / (2025 - 1900)) + 0);
-                const xPosCorrectYear = Math.round(((props.correctYear - 1900) * (rect.width - 0) / (2025 - 1900)) + 0);
+        if (isLocked.value === false) {
 
-                animateYear();
-                transitionX.value = true;
-                
-                // if the guessed year comes before the actual year of publication
-                if (xPosYearGuess < xPosCorrectYear) {
-                    useRight.value = false;
-                    timelineSectionWidth.value = xPosCorrectYear - xPosYearGuess;
-                    timelineSectionLeft.value = xPosYearGuess;
-                    posXCorrectYear.value = xPosCorrectYear;
-                }
-
-                // if the guessed year comes after the actual year of publication
-                else if ( xPosYearGuess > xPosCorrectYear) {
-                    useRight.value = true;
-                    timelineSectionWidth.value = xPosYearGuess - xPosCorrectYear;
-                    timelineSectionRight.value = rect.width - xPosYearGuess;
-                    posXCorrectYear.value = xPosCorrectYear;
+            isLocked.value = true;
+            emit('selectYear', yearGuess.value);
+    
+            // if the guessed year is not the actual year of publication
+            if (yearGuess.value != props.correctYear) {
+                if (timelineRef.value) {
+                    showDifference.value = true;
+                    const rect = timelineRef.value.getBoundingClientRect();
+                    
+                    const xPosYearGuess = Math.round(((yearGuess.value - 1900) * (rect.width - 0) / (2025 - 1900)) + 0);
+                    const xPosCorrectYear = Math.round(((props.correctYear - 1900) * (rect.width - 0) / (2025 - 1900)) + 0);
+    
+                    animateYear();
+                    transitionX.value = true;
+                    
+                    // if the guessed year comes before the actual year of publication
+                    if (xPosYearGuess < xPosCorrectYear) {
+                        useRight.value = false;
+                        timelineSectionWidth.value = xPosCorrectYear - xPosYearGuess;
+                        timelineSectionLeft.value = xPosYearGuess;
+                        posXCorrectYear.value = xPosCorrectYear;
+                    }
+    
+                    // if the guessed year comes after the actual year of publication
+                    else if ( xPosYearGuess > xPosCorrectYear) {
+                        useRight.value = true;
+                        timelineSectionWidth.value = xPosYearGuess - xPosCorrectYear;
+                        timelineSectionRight.value = rect.width - xPosYearGuess;
+                        posXCorrectYear.value = xPosCorrectYear;
+                    }
                 }
             }
         }
@@ -134,7 +138,7 @@
 <template>
     <div class="timeline-container">
         <h1>1900</h1>
-        <div ref="timelineRef" class="timeline" @mouseover="showYearGuess = true" @mouseleave="handleMouseLeave" @mousemove="getYear" @click="!isLocked ? lockYear : null">
+        <div ref="timelineRef" class="timeline" @mouseover="showYearGuess = true" @mouseleave="handleMouseLeave" @mousemove="getYear" @click="lockYear">
             <h1 class="year-correct" :style="transitionX ? {left: posXCorrectYear + 'px', transition: '2s' } : {visibility: 'hidden', left: posXCorrectYear + 'px' }" >{{ animatedYear }}</h1>
             <div class="timeline-difference" 
             :style="useRight 

@@ -34,10 +34,7 @@
 </script>
 
 <template>
-    <header>
         <h1>Congratulations you finished the game!</h1>
-    </header>
-    <main>
         <h1>Score: {{ score }}</h1>
         <h1>Highscore: {{ highScore !== null ? highScore : 'Loading...' }}</h1>
         <router-link to="/CineLine/splashscreen">Start a new game</router-link>
@@ -53,7 +50,6 @@
             </ul>
             <p v-else>No scores available yet.</p>
         </div>
-    </main>
 </template>
 
 <style>
